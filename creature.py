@@ -1,13 +1,27 @@
 
 class Creature:
-    def __init__(self):
-        self._health = 0
-        self._attack = 0
-        self._defence = 0
-        self._evasion = 0
-        self._equipment = []
-        self._inventory = []
-        self._effects = []
+    def __init__(self,
+                 health=0,
+                 attack=0,
+                 defence=0,
+                 evasion=0,
+                 equipment=None,
+                 inventory=None,
+                 effects=None):
+
+        if effects is None:
+            effects = []
+        if inventory is None:
+            inventory = []
+        if equipment is None:
+            equipment = []
+        self._health = health
+        self._attack = attack
+        self._defence = defence
+        self._evasion = evasion
+        self._equipment = equipment
+        self._inventory = inventory
+        self._effects = effects
 
     def get_health(self):
         return self._health
@@ -46,7 +60,7 @@ class Creature:
     def add_item_equipment(self, item):
         # todo kontrola - nechceme mat naraz dva mece, atd
         self._equipment.append(item)
-        return True # podla toho, ci sa podarilo vlzoit, alebo nie
+        return True  # podla toho, ci sa podarilo vlzoit, alebo nie
 
     def get_inventory(self):
         return self._inventory
@@ -67,3 +81,6 @@ class Creature:
             # effect.tick()
             # todo
             pass
+
+    def is_alive(self):
+        return self._health > 0
