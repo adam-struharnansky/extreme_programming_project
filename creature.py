@@ -1,13 +1,13 @@
 
 class Creature:
     def __init__(self,
-                 health=0,
-                 attack=0,
-                 defence=0,
-                 evasion=0,
-                 equipment=None,
-                 inventory=None,
-                 effects=None):
+                 health:int=0,
+                 attack:int=0,
+                 defence:int=0,
+                 evasion:int=0,
+                 equipment:list=None,
+                 inventory:list=None,
+                 effects:list=None) -> None:
 
         if effects is None:
             effects = []
@@ -82,5 +82,5 @@ class Creature:
             # todo
             pass
 
-    def is_alive(self):
+    def is_alive(self) -> bool:
         return self._health > 0
