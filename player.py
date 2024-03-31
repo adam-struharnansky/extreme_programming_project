@@ -8,6 +8,7 @@ class Player(Creature):
                  attack:int=0,
                  defence:int=0,
                  evasion:int=0,
+                 speed: int = 0,
                  equipment:list=None,
                  inventory:list=None,
                  effects:list=None,
@@ -16,7 +17,7 @@ class Player(Creature):
                  current_experience:int=0,
                  next_level_experience:int=0):
 
-        super().__init__(health, attack, defence, evasion, equipment, inventory, effects)
+        super().__init__(health, attack, defence, evasion, speed, equipment, inventory, effects)
         self._name = name
         self._level = level
         self._current_experience = current_experience

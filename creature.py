@@ -10,6 +10,7 @@ class Creature:
                  attack: int = 0,
                  defence: int = 0,
                  evasion: int = 0,
+                 speed: int = 0,
                  equipment: list = None,
                  inventory: list = None,
                  effects: list = None) -> None:
@@ -21,6 +22,7 @@ class Creature:
         self._attack = attack
         self._defence = defence
         self._evasion = evasion
+        self._speed = speed
 
     def get_health(self) -> int:
         return self._health
@@ -69,6 +71,12 @@ class Creature:
 
     def set_evasion(self, new_evasion: int) -> None:
         self._evasion = new_evasion
+
+    def get_speed(self) -> int:
+        return self._speed
+
+    def set_speed(self, new_speed: int) -> None:
+        self._speed = new_speed
 
     def get_equipment(self) -> list:
         return self._equipment

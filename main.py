@@ -19,6 +19,7 @@ pygame.init()
 # Set the size of the window and create it
 size = width, height = 800, 800
 screen = pygame.display.set_mode(size)
+DEBUG = False
 
 # Set the title of the window
 pygame.display.set_caption('Pygame Basic Window')
@@ -47,6 +48,9 @@ map = Map(screen)
 while True:
     
     for event in pygame.event.get():
+        if DEBUG:
+            if event.type != pygame.MOUSEMOTION:
+                print("Event: " + str(event))
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
