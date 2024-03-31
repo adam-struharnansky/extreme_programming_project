@@ -5,6 +5,7 @@ class Enemy(Creature):
 
     def __init__(self,
                  health:int=0,
+                 max_health:int=1,
                  attack:int=0,
                  defence:int=0,
                  evasion:int=0,
@@ -16,7 +17,7 @@ class Enemy(Creature):
                  description:str="",
                  experience_drop:int=0) -> None:
 
-        super().__init__(health, attack, defence, evasion, speed, equipment, inventory, effects)
+        super().__init__(health, max_health, attack, defence, evasion, speed, equipment, inventory, effects)
         self._name = name
         self._description = description
         self._experience_drop = experience_drop

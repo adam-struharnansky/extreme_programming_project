@@ -7,6 +7,7 @@ from item import Item
 class Creature:
     def __init__(self,
                  health: int = 0,
+                 max_health: int = 1,
                  attack: int = 0,
                  defence: int = 0,
                  evasion: int = 0,
@@ -19,6 +20,7 @@ class Creature:
         self._equipment = equipment if equipment else []  # todo - nechceme toto urobit zlozitejsie, rozdlit to na casti
         # aby sme mohli mat iba jeden mec, jeden stit..., ze by sme tu mali prava/lava ruka, hlava, telo, nohy, topanky
         self._health = health
+        self._max_health = max_health
         self._attack = attack
         self._defence = defence
         self._evasion = evasion
@@ -30,8 +32,17 @@ class Creature:
     def set_health(self, new_health: int) -> None:
         self._health = new_health
 
+    def get_max_health(self) -> int:
+        return self._max_health
+
+    def set_max_health(self, new_health: int) -> None:
+        self._max_health = new_health
+
     def change_health(self, health_difference: int) -> None:
         self._health += health_difference
+
+    def heal_max(self) -> None:
+        self._health = self._max_health
 
     def get_attack(self) -> int:
         return self._attack

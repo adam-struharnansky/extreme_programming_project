@@ -99,6 +99,7 @@ class Map:
         text += " | Spd: " + str(self.dat.player.get_speed())
         text += " | Lvl: " + str(self.dat.player.get_level())
         text += " | XP: " + str(self.dat.player.get_defence()) + "/" + str(self.dat.player.get_next_level_experience())
+        text += " | HP: " + str(self.dat.player.get_health()) + "/" + str(self.dat.player.get_max_health())
         text_surface = self.font.render(text, False, (255, 255, 255))
         self.stat_tab.blit(text_surface, (10,5))
 
