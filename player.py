@@ -15,7 +15,7 @@ class Player(Creature):
                  name:str="",
                  level:int=0,
                  current_experience:int=0,
-                 next_level_experience:int=0):
+                 next_level_experience:int=2):
 
         super().__init__(health, attack, defence, evasion, speed, equipment, inventory, effects)
         self._name = name
@@ -35,6 +35,9 @@ class Player(Creature):
             self._level += 1
             self._current_experience -= self._next_level_experience
             self._next_level_experience = self.get_next_next_level_experience(self._next_level_experience)
+
+    def get_next_level_experience(self) -> int:
+        return self._next_level_experience
 
     def get_next_next_level_experience(self, current_next_level_experience:int) -> int:
         return current_next_level_experience * 1.5  # todo - vybalansovat tuto konstantu

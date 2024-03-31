@@ -20,6 +20,14 @@ pygame.init()
 size = width, height = 800, 800
 screen = pygame.display.set_mode(size)
 
+screen1_size = (width, 50)
+screen2_size = (width, height-50)
+
+# Create screen1 and screen2 surfaces
+screen1 = pygame.Surface(screen1_size)
+screen2 = pygame.Surface(screen2_size)
+
+
 DEBUG_ALL = False
 DEBUG_KEY = True
 # Set the title of the window
@@ -40,11 +48,13 @@ key_states = {} #left, right, up, down
 
 #tu bude zadefinovanie classes ak je potrebne
 menu = Menu(buttons, screen)
-map = Map(screen)
+map = Map(screen2, screen1)
 
 def handle_keys():
     keys=pygame.key.get_pressed()
-         
+    screen.blit(screen1, (0, 0))
+    screen.blit(screen2, (0, 50))
+
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if key_states[pygame.K_RIGHT] < 1:
             key_states[pygame.K_RIGHT] = 1
@@ -101,8 +111,9 @@ while True:
             sys.exit()
 
     buttons = []
+    
     screen.fill(background_color)
-
+    
 
     #Spravanie ak sme v menu state_of_game = 0
     if state_of_game == GameState.MENU:
@@ -123,7 +134,7 @@ while True:
             state_of_game = GameState.LOADING_GAME
 
     #Nacitanie mapy
-    if state_of_game == GameState.LOADING_GAME:
+    if state_of_game == GameState.LOADING_GAME:   
         map.load_map()
         map.draw()
         state_of_game = GameState.PLAYING_GAME

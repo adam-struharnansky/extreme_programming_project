@@ -1,6 +1,7 @@
 import pygame
 import sys
 from field import Field
+from player import Player
 import pickle
 
 
@@ -11,23 +12,29 @@ class Map:
             self.map = None
             self.field_size = 100
             self.player_pos = [0,0] #X, Y
+            self.player = Player()
 
-    def __init__(self, screen, file = 'data/map0.pickle'):                
+    def __init__(self, screen, stat_tab, file = 'data/map0.pickle'):                
         self.dat = self.Data()
         self.screen = screen
+        self.stat_tab = stat_tab
         self.file = file
+        font = pygame.font.init()
+        self.font = pygame.font.SysFont('Arial', 30)
 
+        
         self.colors = {
                         "water": (0, 0, 255),  # Blue
                         "plains": (0, 255, 0),  # Green
                         "desert": (255, 255, 0)  # Yellow
                     }
+        self.background_color = (255, 255, 255)
 
     def save_map(self, file = None):
         if file == None:
             file = self.file
         with open(file, 'wb') as f:
-            pickle.dump(self.data,f)
+            pickle.dump(self.dat,f)
 
     def load_map(self, file = None):
         if file == None:
@@ -63,6 +70,7 @@ class Map:
         #self.draw_map() nacitavanie mapy a jej kreslenie moc nesuvisi
 
     def draw(self):
+        self.screen.fill(self.background_color)
         self.draw_map()
         self.draw_monsters()
         self.draw_player()
@@ -82,6 +90,17 @@ class Map:
 
         # Draw the circle
         pygame.draw.circle(self.screen, circle_color, (center_x, center_y), circle_radius)
+
+        #===================================================
+        text = ""
+        text += "Att: " + str(self.dat.player.get_attack())
+        text += " | Def: " + str(self.dat.player.get_defence())
+        text += " | Evs: " + str(self.dat.player.get_evasion())
+        text += " | Spd: " + str(self.dat.player.get_speed())
+        text += " | Lvl: " + str(self.dat.player.get_level())
+        text += " | XP: " + str(self.dat.player.get_defence()) + "/" + str(self.dat.player.get_next_level_experience())
+        text_surface = self.font.render(text, False, (255, 255, 255))
+        self.stat_tab.blit(text_surface, (10,5))
 
     def draw_monsters(self):
         field_size = self.dat.field_size
