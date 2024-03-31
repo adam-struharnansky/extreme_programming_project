@@ -60,10 +60,15 @@ while True:
         buttons = menu.buttons
 
         for button in buttons:
-           response =  button.handle_event(event)
+            temp_response = button.handle_event(event)
+            if temp_response != None:
+               response = temp_response
+               break
+        else:
+            response = None
 
         #Kliknutie na button load Game a zmenenie stavu
-        if response == "Load Game"  or response == "New Game":
+        if response in ["Load Game", "New Game"]:
             state_of_game = GameState.LOADING_GAME
 
     #Nacitanie mapy
