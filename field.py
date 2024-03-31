@@ -26,7 +26,6 @@ class Field:
         if active_objects is not None:
             self.objects.extend(active_objects)
 
-        self.player_present = False
         self.enemy_present = False
 
     def add_object(self, object):

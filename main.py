@@ -42,7 +42,49 @@ key_states = {} #left, right, up, down
 menu = Menu(buttons, screen)
 map = Map(screen)
 
+def handle_keys():
+    keys=pygame.key.get_pressed()
+         
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if key_states[pygame.K_RIGHT] < 1:
+            key_states[pygame.K_RIGHT] = 1
+    else:
+        key_states[pygame.K_RIGHT] = 0
 
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if key_states[pygame.K_LEFT] < 1:
+            key_states[pygame.K_LEFT] = 1
+    else:
+        key_states[pygame.K_LEFT] = 0
+
+    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if key_states[pygame.K_DOWN] < 1:
+            key_states[pygame.K_DOWN] = 1
+    else:
+        key_states[pygame.K_DOWN] = 0  
+        
+    if keys[pygame.K_UP] or keys[pygame.K_w]:
+        if key_states[pygame.K_UP] < 1:
+            key_states[pygame.K_UP] = 1
+    else:
+        key_states[pygame.K_UP] = 0
+        
+
+    for i in key_states.keys():
+        if (key_states[i] == 1):
+            key_states[i] = 2
+            if DEBUG_KEY:
+                match i:
+                    case 1073741903:
+                        print("right")
+                    case 1073741904:
+                        print("left")
+                    case 1073741905:
+                        print("down")
+                    case 1073741906:
+                        print("up")
+                    case _:
+                        print("Achievement unlocked: How did we get here?")
 
 # Main loop
 
@@ -86,49 +128,8 @@ while True:
         state_of_game = GameState.PLAYING_GAME
 
     if state_of_game == GameState.PLAYING_GAME:
-        keys=pygame.key.get_pressed()
-         
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            if key_states[pygame.K_RIGHT] < 1:
-                key_states[pygame.K_RIGHT] = 1
-        else:
-            key_states[pygame.K_RIGHT] = 0
-
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            if key_states[pygame.K_LEFT] < 1:
-                key_states[pygame.K_LEFT] = 1
-        else:
-            key_states[pygame.K_LEFT] = 0
-
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            if key_states[pygame.K_DOWN] < 1:
-                key_states[pygame.K_DOWN] = 1
-        else:
-            key_states[pygame.K_DOWN] = 0  
-            
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            if key_states[pygame.K_UP] < 1:
-                key_states[pygame.K_UP] = 1
-        else:
-            key_states[pygame.K_UP] = 0
-            
-
-        for i in key_states.keys():
-            if (key_states[i] == 1):
-                key_states[i] = 2
-                if DEBUG_KEY:
-                    match i:
-                        case 1073741903:
-                            print("right")
-                        case 1073741904:
-                            print("left")
-                        case 1073741905:
-                            print("down")
-                        case 1073741906:
-                            print("up")
-                        case _:
-                            print("Achievement unlocked: How did we get here?")
-
+        
+        handle_keys()
         map.draw()
 
     

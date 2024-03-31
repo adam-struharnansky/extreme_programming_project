@@ -6,10 +6,16 @@ import pickle
 
 class Map:
 
-    def __init__(self, screen):
-        self.map = map
+    class Data():
+        def __init__(self):
+            self.map = None
+            self.field_size = 100
+            self.player_pos = [0,0]
+
+    def __init__(self, screen, file = 'data/map0.pickle'):                
+        self.dat = None
         self.screen = screen
-        self.field_size = 100
+        self.file = file
 
         self.colors = {
                         "water": (0, 0, 255),  # Blue
@@ -17,11 +23,18 @@ class Map:
                         "desert": (255, 255, 0)  # Yellow
                     }
 
+    def save_map(self, file = None):
+        if file == None:
+            file = self.file
+        with open(file, 'wb') as f:
+            pickle.dump(self.data,f)
 
-    def load_map(self):
-       with open('data/map1.pickle', 'rb') as f:
-        self.map = pickle.load(f)
-
+    def load_map(self, file = None):
+        if file == None:
+            file = self.file
+        with open(file, 'rb') as f:
+            self.dat = pickle.load(f)
+        
         #self.draw_map() nacitavanie mapy a jej kreslenie moc nesuvisi
 
     def draw(self):
@@ -30,31 +43,30 @@ class Map:
         self.draw_player()
 
     def draw_player(self):
-        for x, row in enumerate(self.map):
-            for y, field in enumerate(row):
-                # Determine the color based on the field type
-                if field.player_present:
-                    # Calculate the center of the rectangle
-                    center_x = x * (self.field_size + 5) + self.field_size // 2
-                    center_y = y * (self.field_size + 5) + self.field_size // 2
+        x, y = self.dat.player_pos
+        field_size = self.dat.field_size
+        
+        center_x = x * (field_size + 5) + field_size // 2
+        center_y = y * (field_size + 5) + field_size // 2
 
-                    # Circle color (RGB), you can customize this
-                    circle_color = (0, 255, 0)  # Green, for example
+        #Circle color (RGB), you can customize this
+        circle_color = (0, 255, 0)  # Green, for example
 
-                    # Circle radius
-                    circle_radius = 20  # You can adjust this size
+        # Circle radius
+        circle_radius = 20  # You can adjust this size
 
-                    # Draw the circle
-                    pygame.draw.circle(self.screen, circle_color, (center_x, center_y), circle_radius)
+        # Draw the circle
+        pygame.draw.circle(self.screen, circle_color, (center_x, center_y), circle_radius)
 
     def draw_monsters(self):
-        for x, row in enumerate(self.map):
+        field_size = self.dat.field_size
+        for x, row in enumerate(self.dat.map):
             for y, field in enumerate(row):
                 # Determine the color based on the field type
                 if field.enemy_present:
                     # Calculate the center of the rectangle
-                    center_x = x * (self.field_size + 5) + self.field_size // 2
-                    center_y = y * (self.field_size + 5) + self.field_size // 2
+                    center_x = x * (field_size + 5) + field_size // 2
+                    center_y = y * (field_size + 5) + field_size // 2
 
                     # Circle color (RGB), you can customize this
                     circle_color = (255, 0, 0)  # Red, for example
@@ -66,15 +78,16 @@ class Map:
                     pygame.draw.circle(self.screen, circle_color, (center_x, center_y), circle_radius)
 
     def draw_map(self):
+        field_size = self.dat.field_size
           # Assuming each field is a 100x100 square
-        for x, row in enumerate(self.map):
+        for x, row in enumerate(self.dat.map):
             for y, field in enumerate(row):
                 # Determine the color based on the field type
                 color = self.colors.get(field.field_type, (0, 0, 0))
                 
                 # Draw the field rectangle
-                pygame.draw.rect(self.screen, color, (x * (self.field_size + 5),
-                                                      y * (self.field_size + 5),
-                                                      self.field_size,
-                                                      self.field_size))
+                pygame.draw.rect(self.screen, color, (x * (field_size + 5),
+                                                      y * (field_size + 5),
+                                                      field_size,
+                                                      field_size))
 
