@@ -10,6 +10,7 @@ from menu import Menu
 class GameState(Enum):
     MENU = 0
     LOADING_GAME = 1
+    PLAYING_GAME = 2
 
 
 # Initialize Pygame
@@ -74,6 +75,8 @@ while True:
     #Nacitanie mapy
     if state_of_game == GameState.LOADING_GAME:
         map.load_map()
+        map.draw()
+        state_of_game == GameState.PLAYING_GAME
 
     # Fill the screen with the background color
     
