@@ -10,10 +10,10 @@ class Map:
         def __init__(self):
             self.map = None
             self.field_size = 100
-            self.player_pos = [0,0]
+            self.player_pos = [0,0] #X, Y
 
     def __init__(self, screen, file = 'data/map0.pickle'):                
-        self.dat = None
+        self.dat = self.Data()
         self.screen = screen
         self.file = file
 
@@ -34,6 +34,31 @@ class Map:
             file = self.file
         with open(file, 'rb') as f:
             self.dat = pickle.load(f)
+
+    def move(self, direction):
+        match direction:
+            case 1073741903:
+                self.dat.player_pos[0] += 1
+            case 1073741904:
+                self.dat.player_pos[0] -= 1
+            case 1073741905:
+                self.dat.player_pos[1] += 1
+            case 1073741906:
+                self.dat.player_pos[1] -= 1
+
+        if self.dat.player_pos[0] < 0:
+            self.dat.player_pos[0] = 0
+
+        if self.dat.player_pos[1] < 0:
+            self.dat.player_pos[1] = 0
+            #todo, skontroluj ci tu je spravne X a Y max dlzka pola
+        if self.dat.player_pos[0] >= len(self.dat.map[0]):
+            self.dat.player_pos[0] = len(self.dat.map[0]) - 1
+
+        if self.dat.player_pos[1] >= len(self.dat.map):
+            self.dat.player_pos[1] = len(self.dat.map) - 1
+
+        
         
         #self.draw_map() nacitavanie mapy a jej kreslenie moc nesuvisi
 

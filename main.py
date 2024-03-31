@@ -73,6 +73,7 @@ def handle_keys():
     for i in key_states.keys():
         if (key_states[i] == 1):
             key_states[i] = 2
+            map.move(i)
             if DEBUG_KEY:
                 match i:
                     case 1073741903:
