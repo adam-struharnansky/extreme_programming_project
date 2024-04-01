@@ -14,7 +14,7 @@ class Map:
             self.player_pos = [0,0] #X, Y
             self.player = Player()
 
-    def __init__(self, screen, stat_tab, file = 'data/map0.pickle'):                
+    def __init__(self, screen, stat_tab, file = 'data/map2.pickle', debug = False):                
         self.dat = self.Data()
         self.screen = screen
         self.stat_tab = stat_tab
@@ -29,6 +29,8 @@ class Map:
                         "desert": (255, 255, 0)  # Yellow
                     }
         self.background_color = (255, 255, 255)
+
+        self.DEBUG = debug
 
     def save_map(self, file = None):
         if file == None:
@@ -59,13 +61,14 @@ class Map:
         if self.dat.player_pos[1] < 0:
             self.dat.player_pos[1] = 0
             #todo, skontroluj ci tu je spravne X a Y max dlzka pola
-        if self.dat.player_pos[0] >= len(self.dat.map[0]):
-            self.dat.player_pos[0] = len(self.dat.map[0]) - 1
+        if self.dat.player_pos[1] >= len(self.dat.map[0]):
+            self.dat.player_pos[1] = len(self.dat.map[0]) - 1
 
-        if self.dat.player_pos[1] >= len(self.dat.map):
-            self.dat.player_pos[1] = len(self.dat.map) - 1
+        if self.dat.player_pos[0] >= len(self.dat.map):
+            self.dat.player_pos[0] = len(self.dat.map) - 1
 
-        
+        if self.DEBUG:
+            print("Player pos:", self.dat.player_pos)        
         
         #self.draw_map() nacitavanie mapy a jej kreslenie moc nesuvisi
 
@@ -78,12 +81,12 @@ class Map:
     def draw_player(self):
         x, y = self.dat.player_pos
         field_size = self.dat.field_size
-        
+        x, y = (2,2)
         center_x = x * (field_size + 5) + field_size // 2
         center_y = y * (field_size + 5) + field_size // 2
 
         #Circle color (RGB), you can customize this
-        circle_color = (0, 255, 0)  # Green, for example
+        circle_color = (100, 200, 50)  # Green, for example
 
         # Circle radius
         circle_radius = 20  # You can adjust this size
@@ -124,15 +127,19 @@ class Map:
 
     def draw_map(self):
         field_size = self.dat.field_size
+        px, py = self.dat.player_pos
           # Assuming each field is a 100x100 square
-        for x, row in enumerate(self.dat.map):
-            for y, field in enumerate(row):
+        for x, row in enumerate(self.dat.map[max(px-2, 0):px+3]):
+            for y, field in enumerate(row[max(py-2, 0):py+3]):
                 # Determine the color based on the field type
                 color = self.colors.get(field.field_type, (0, 0, 0))
-                
+
+                adjusted_x, adjusted_y = x, y
+                adjusted_x -= min(px-2,0)
+                adjusted_y -= min(py-2,0)
                 # Draw the field rectangle
-                pygame.draw.rect(self.screen, color, (x * (field_size + 5),
-                                                      y * (field_size + 5),
+                pygame.draw.rect(self.screen, color, (adjusted_x * (field_size + 5),
+                                                      adjusted_y * (field_size + 5),
                                                       field_size,
                                                       field_size))
 

@@ -17,7 +17,7 @@ class GameState(Enum):
 pygame.init()
 
 # Set the size of the window and create it
-size = width, height = 800, 800
+size = width, height = 700, 750
 screen = pygame.display.set_mode(size)
 
 screen1_size = (width, 50)
@@ -30,6 +30,7 @@ screen2 = pygame.Surface(screen2_size)
 
 DEBUG_ALL = False
 DEBUG_KEY = True
+DEBUG_MOVE = True
 # Set the title of the window
 pygame.display.set_caption('Pygame Basic Window')
 
@@ -48,7 +49,7 @@ key_states = {} #left, right, up, down
 
 #tu bude zadefinovanie classes ak je potrebne
 menu = Menu(buttons, screen)
-map = Map(screen2, screen1)
+map = Map(screen2, screen1, debug = DEBUG_ALL or DEBUG_MOVE)
 
 def handle_keys():
     keys=pygame.key.get_pressed()
