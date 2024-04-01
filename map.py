@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import sys
 from field import Field
@@ -43,6 +45,23 @@ class Map:
             file = self.file
         with open(file, 'rb') as f:
             self.dat = pickle.load(f)
+
+    def generate_map(self):
+        self.dat = self.Data()
+
+        w, h = 100, 100
+        self.dat.field_size = 135
+        self.dat.player_pos = [random.randint(0, h-1), random.randint(0, w-1)]
+        self.dat.player = Player()
+        self.dat.map = []
+
+        for i in range(h):
+            row = []
+            for j in range(w):
+                row.append(Field())
+            self.dat.map.append(row)
+
+        self.dat.map[self.dat.player_pos[0]][self.dat.player_pos[1]].player_presence(True)
 
     def move(self, direction):
         match direction:

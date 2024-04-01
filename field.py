@@ -1,8 +1,11 @@
+import random
+
+
 class Field:
 
     __possible_fields_types = ['mountain', 'plains', 'forest', 'desert', 'water']
 
-    def __init__(self, field_type, active_objects=None, properties=None):
+    def __init__(self, field_type=None, active_objects=None, properties=None):
         """
         Initializes a new instance of the Field class.
 
@@ -16,10 +19,10 @@ class Field:
         """
 
         # check if field type is correct
-        if field_type.lower() not in self.__possible_fields_types:
+        if field_type is not None and field_type.lower() not in self.__possible_fields_types:
             raise ModuleNotFoundError(f'field type "{field_type}" not found\n Possible types are: {self.__possible_fields_types}')
         
-        self.field_type = field_type
+        self.field_type = field_type if field_type else random.choice(self.__possible_fields_types)
         self.properties = properties if properties else {}
         self.objects = []
         

@@ -9,8 +9,9 @@ from menu import Menu
 
 class GameState(Enum):
     MENU = 0
-    LOADING_GAME = 1
-    PLAYING_GAME = 2
+    LOADING_NEW_GAME = 1
+    LOADING_EXISTING_GAME = 2
+    PLAYING_GAME = 3
 
 
 # Initialize Pygame
@@ -131,11 +132,17 @@ while True:
             response = None
 
         #Kliknutie na button load Game a zmenenie stavu
-        if response in ["Load Game", "New Game"]:
-            state_of_game = GameState.LOADING_GAME
+        if response == "New Game":
+            state_of_game = GameState.LOADING_NEW_GAME
+        elif response == "Load Game":
+            state_of_game = GameState.LOADING_EXISTING_GAME
 
     #Nacitanie mapy
-    if state_of_game == GameState.LOADING_GAME:   
+    if state_of_game == GameState.LOADING_NEW_GAME:
+        map.generate_map()
+        map.draw()
+        state_of_game = GameState.PLAYING_GAME
+    if state_of_game == GameState.LOADING_EXISTING_GAME:
         map.load_map()
         map.draw()
         state_of_game = GameState.PLAYING_GAME
