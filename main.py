@@ -46,6 +46,7 @@ background_color = (255, 255, 255) # RGB color for white
 # state_of_game premenna sluzi nato aby sme vedeli v akom bude hry sa nachadzame, 0-zakladne menu
 state_of_game = GameState.MENU
 key_states = {}  # left, right, up, down
+saving = False
 
 # tu bude zadefinovanie classes ak je potrebne
 menu = Menu(screen)
@@ -154,10 +155,14 @@ while True:
         else:
             response = None
 
-        if response == "Save Game":
+        if response == "Save Game" and not saving:
+            print("Map saved")
+            saving = True
             map.save_map()
         elif response == "Exit to Menu":
             state_of_game = GameState.MENU
+        elif response == None:
+            saving = False
 
     # Fill the screen with the background color
 
