@@ -18,7 +18,7 @@ class GameState(Enum):
 pygame.init()
 
 # Set the size of the window and create it
-size = width, height = 700, 750
+size = width, height = 700, 770
 screen = pygame.display.set_mode(size)
 
 screen1_size = (width, 50)
@@ -41,16 +41,16 @@ background_color = (255, 255, 255) # RGB color for white
 
 
 ############################################################################################
-#Tu budu premenne ktore potrebujeme mat v hlavnom cykle
+# Tu budu premenne ktore potrebujeme mat v hlavnom cykle
 
-#state_of_game premenna sluzi nato aby sme vedeli v akom bude hry sa nachadzame, 0-zakladne menu
+# state_of_game premenna sluzi nato aby sme vedeli v akom bude hry sa nachadzame, 0-zakladne menu
 state_of_game = GameState.MENU
-buttons = []
-key_states = {} #left, right, up, down
+key_states = {}  # left, right, up, down
 
-#tu bude zadefinovanie classes ak je potrebne
-menu = Menu(buttons, screen)
+# tu bude zadefinovanie classes ak je potrebne
+menu = Menu(screen)
 map = Map(screen2, screen1, debug = DEBUG_ALL or DEBUG_MOVE)
+
 
 def handle_keys():
     keys=pygame.key.get_pressed()
@@ -80,7 +80,6 @@ def handle_keys():
             key_states[pygame.K_UP] = 1
     else:
         key_states[pygame.K_UP] = 0
-        
 
     for i in key_states.keys():
         if (key_states[i] == 1):
@@ -102,8 +101,6 @@ def handle_keys():
 # Main loop
 
 while True:
-
-    
     for event in pygame.event.get():
         if DEBUG_ALL:
             if event.type != pygame.MOUSEMOTION:
@@ -111,33 +108,30 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
-    buttons = []
     
     screen.fill(background_color)
-    
 
-    #Spravanie ak sme v menu state_of_game = 0
+    # Spravanie ak sme v menu state_of_game = 0
     if state_of_game == GameState.MENU:
-        menu.create_base_menu()
+        menu.draw_base_menu()
 
-        buttons = menu.buttons
-
-        for button in buttons:
+        for button in menu.base_menu_buttons:
             temp_response = button.handle_event(event)
-            if temp_response != None:
-               response = temp_response
-               break
+            if temp_response is not None:
+                response = temp_response
+                break
         else:
             response = None
 
-        #Kliknutie na button load Game a zmenenie stavu
+        # Kliknutie na button load Game a zmenenie stavu
         if response == "New Game":
             state_of_game = GameState.LOADING_NEW_GAME
         elif response == "Load Game":
             state_of_game = GameState.LOADING_EXISTING_GAME
+        elif response == "Exit Game":
+            break
 
-    #Nacitanie mapy
+    # Nacitanie mapy
     if state_of_game == GameState.LOADING_NEW_GAME:
         map.generate_map()
         map.draw()
@@ -148,14 +142,24 @@ while True:
         state_of_game = GameState.PLAYING_GAME
 
     if state_of_game == GameState.PLAYING_GAME:
-        
         handle_keys()
         map.draw()
+        menu.draw_in_game_buttons()
 
-    
+        for button in menu.in_game_buttons:
+            temp_response = button.handle_event(event)
+            if temp_response is not None:
+                response = temp_response
+                break
+        else:
+            response = None
+
+        if response == "Save Game":
+            map.save_map()
+        elif response == "Exit to Menu":
+            state_of_game = GameState.MENU
 
     # Fill the screen with the background color
-    
 
     # Update the display
     pygame.display.flip()

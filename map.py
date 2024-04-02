@@ -1,3 +1,4 @@
+import os
 import random
 
 import pygame
@@ -35,13 +36,14 @@ class Map:
         self.DEBUG = debug
 
     def save_map(self, file = None):
-        if file == None:
-            file = self.file
+        if file is None:
+            num = len(os.listdir('data'))
+            file = f'data/map{num}.pickle'
         with open(file, 'wb') as f:
-            pickle.dump(self.dat,f)
+            pickle.dump(self.dat, f)
 
     def load_map(self, file = None):
-        if file == None:
+        if file is None:
             file = self.file
         with open(file, 'rb') as f:
             self.dat = pickle.load(f)
