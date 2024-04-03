@@ -2,7 +2,6 @@ import pygame
 import sys
 
 from enum import Enum
-from field import Field
 from map import Map
 from menu import Menu
 
@@ -14,47 +13,36 @@ class GameState(Enum):
     PLAYING_GAME = 3
 
 
-# Initialize Pygame
 pygame.init()
 
-# Set the size of the window and create it
 size = width, height = 700, 770
 screen = pygame.display.set_mode(size)
 
 screen1_size = (width, 50)
-screen2_size = (width, height-50)
+screen2_size = (width, height - 50)
 
-# Create screen1 and screen2 surfaces
 screen1 = pygame.Surface(screen1_size)
 screen2 = pygame.Surface(screen2_size)
-
 
 DEBUG_ALL = False
 DEBUG_KEY = True
 DEBUG_MOVE = True
-# Set the title of the window
+
 pygame.display.set_caption('Pygame Basic Window')
 
-# Set a background color
-background_color = (255, 255, 255) # RGB color for white
-##############################################################################################
+background_color = (255, 255, 255)
 
-
-############################################################################################
-# Tu budu premenne ktore potrebujeme mat v hlavnom cykle
-
-# state_of_game premenna sluzi nato aby sme vedeli v akom bude hry sa nachadzame, 0-zakladne menu
 state_of_game = GameState.MENU
 key_states = {}  # left, right, up, down
 saving = False
 
 # tu bude zadefinovanie classes ak je potrebne
 menu = Menu(screen)
-map = Map(screen2, screen1, debug = DEBUG_ALL or DEBUG_MOVE)
+map = Map(screen2, screen1, debug=DEBUG_ALL or DEBUG_MOVE)
 
 
 def handle_keys():
-    keys=pygame.key.get_pressed()
+    keys = pygame.key.get_pressed()
     screen.blit(screen1, (0, 0))
     screen.blit(screen2, (0, 50))
 
@@ -74,8 +62,8 @@ def handle_keys():
         if key_states[pygame.K_DOWN] < 1:
             key_states[pygame.K_DOWN] = 1
     else:
-        key_states[pygame.K_DOWN] = 0  
-        
+        key_states[pygame.K_DOWN] = 0
+
     if keys[pygame.K_UP] or keys[pygame.K_w]:
         if key_states[pygame.K_UP] < 1:
             key_states[pygame.K_UP] = 1
@@ -83,7 +71,7 @@ def handle_keys():
         key_states[pygame.K_UP] = 0
 
     for i in key_states.keys():
-        if (key_states[i] == 1):
+        if key_states[i] == 1:
             key_states[i] = 2
             map.move(i)
             if DEBUG_KEY:
@@ -99,6 +87,7 @@ def handle_keys():
                     case _:
                         print("Achievement unlocked: How did we get here?")
 
+
 # Main loop
 
 while True:
@@ -109,7 +98,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    
+
     screen.fill(background_color)
 
     # Spravanie ak sme v menu state_of_game = 0
@@ -161,10 +150,7 @@ while True:
             map.save_map()
         elif response == "Exit to Menu":
             state_of_game = GameState.MENU
-        elif response == None:
+        elif response is None:
             saving = False
 
-    # Fill the screen with the background color
-
-    # Update the display
     pygame.display.flip()

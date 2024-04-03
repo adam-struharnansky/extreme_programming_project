@@ -22,26 +22,46 @@ class Field:
         if field_type is not None and field_type.lower() not in self.__possible_fields_types:
             raise ModuleNotFoundError(f'field type "{field_type}" not found\n Possible types are: {self.__possible_fields_types}')
         
-        self.field_type = field_type if field_type else random.choice(self.__possible_fields_types)
-        self.properties = properties if properties else {}
-        self.objects = []
+        self._field_type = field_type if field_type else random.choice(self.__possible_fields_types)
+        self._properties = properties if properties else {}
+        self._objects = []
         
         if active_objects is not None:
             self.objects.extend(active_objects)
 
-        self.enemy_present = False
+        self._enemy_present = False
+        self._player_present = False
 
     def __eq__(self, other):
-        if self.field_type != other.field_type:
+        if other is None or not isinstance(other, Field):
             return False
-        if self.properties != other.properties:
+        if self._field_type != other.get_fiel_type():
             return False
-        if self.objects != other.objects:
+        if self._properties != other.get_properties():
             return False
-        if self.enemy_present != other.enemy_present:
+        if self._objects != other.get_objects():
+            return False
+        if self._enemy_present != other.is_enemy_present():
+            return False
+        if self._player_present != other.is_player_present():
             return False
         
         return True
+
+    def get_field_type(self):
+        return self._field_type
+
+    def get_properties(self):
+        return self._properties
+
+    def get_objects(self):
+        return self._objects
+
+    def is_player_present(self):
+        return self._player_present
+
+    def is_enemy_present(self):
+        return self._enemy_present
 
     def add_object(self, object):
         """
@@ -53,7 +73,7 @@ class Field:
         Returns:
         - None
         """
-        self.objects.append(object)
+        self._objects.append(object)
 
     def remove_object(self, object):
         """
@@ -65,10 +85,10 @@ class Field:
         Returns:
         - None
         """
-        if object in self.objects:
-            self.objects.remove(object)
+        if object in self._objects:
+            self._objects.remove(object)
 
-    def player_presence(self, present):
+    def set_player_presence(self, present):
         """
         Sets the presence of a player on the field.
 
@@ -78,7 +98,7 @@ class Field:
         Returns:
         - None
         """
-        self.player_present = present
+        self._player_present = present
 
     def enemy_presence(self, present):
         """
@@ -90,16 +110,4 @@ class Field:
         Returns:
         - None
         """
-        self.enemy_present = present
-
-# Example Usage:
-field1 = Field("mountain", {"height": "high"})
-field1.add_object("tree")
-field1.player_presence(True)
-field1.enemy_presence(False)
-
-#print("Type of the field:", field1.field_type)
-#print("Properties of the field:", field1.properties)
-#print("Objects on the field:", field1.objects)
-#print("Player present:", field1.player_present)
-#print("Enemy present:", field1.enemy_present)
+        self._enemy_present = present

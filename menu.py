@@ -2,7 +2,6 @@ import pygame
 from buttons import Button
 
 
-
 class Menu:
 
     def __init__(self, screen):
