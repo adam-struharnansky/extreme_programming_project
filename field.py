@@ -31,6 +31,18 @@ class Field:
 
         self.enemy_present = False
 
+    def __eq__(self, other):
+        if self.field_type != other.field_type:
+            return False
+        if self.properties != other.properties:
+            return False
+        if self.objects != other.objects:
+            return False
+        if self.enemy_present != other.enemy_present:
+            return False
+        
+        return True
+
     def add_object(self, object):
         """
         Adds an object to the field.

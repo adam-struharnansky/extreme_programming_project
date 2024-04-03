@@ -24,6 +24,36 @@ class Player(Creature):
         self._current_experience = current_experience
         self._next_level_experience = next_level_experience
 
+    def __eq__(self, other):
+        if self._health != other._health:
+            return False
+        if self._max_health != other._max_health:
+            return False
+        if self._attack != other._attack:
+            return False
+        if self._defence != other._defence:
+            return False
+        if self._evasion != other._evasion:
+            return False
+        if self._speed != other._speed:
+            return False
+        if self._equipment != other._equipment:
+            return False
+        if self._inventory != other._inventory:
+            return False
+        if self._effects != other._effects:
+            return False
+        if self._name != other._name:
+            return False
+        if self._level != other._level:
+            return False
+        if self._current_experience != other._current_experience:
+            return False
+        if self._next_level_experience != other._next_level_experience:
+            return False
+
+        return True
+
     def get_level(self) -> int:
         return self._level
 
