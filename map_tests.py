@@ -13,3 +13,4 @@ def test_item_duplicity():
     assert mp.dat.field_size == new_mp.dat.field_size
     assert mp.dat.player_pos == new_mp.dat.player_pos
     assert mp.dat.player == new_mp.dat.player
+
