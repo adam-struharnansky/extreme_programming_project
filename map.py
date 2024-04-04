@@ -14,7 +14,7 @@ class Map:
     class Data:
         def __init__(self):
             self.map = None
-            self.field_size = 100
+            self.field_size = 135
             self.player_pos = [0, 0]  # column row
             self.player = Player()
 
