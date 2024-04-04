@@ -18,12 +18,12 @@ class Map:
             self.player_pos = [0, 0]  # column row
             self.player = Player()
 
-    def __init__(self, screen: pygame.Surface, stat_tab: object, file: str = 'data/map2.pickle',
+    def __init__(self, screen: pygame.Surface, stat_tab: pygame.Surface, file: str = 'data/map2.pickle',
                  debug: bool = False) \
             -> None:
         self._dat = self.Data()
         self._screen = screen
-        self._stat_tab = stat_tab  # todo co to je?
+        self._stat_tab = stat_tab  #pygame surface for displaying stats
         self._file = file
         self._font = pygame.font.SysFont('Arial', 30)
         self._background_color = WHITE
