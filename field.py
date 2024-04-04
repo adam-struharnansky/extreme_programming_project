@@ -1,33 +1,34 @@
 import random
 
+from enum import Enum
+
+
+class FieldType(Enum):
+    MOUNTAIN = 'mountain'
+    PLAINS = 'plains'
+    FOREST = 'forest'
+    DESERT = 'desert'
+    WATER = 'water'
+
 
 class Field:
 
-    __possible_fields_types = ['mountain', 'plains', 'forest', 'desert', 'water']
-
-    def __init__(self, field_type=None, active_objects=None, properties=None):
+    def __init__(self, field_type: FieldType = None, active_objects: list = None, properties: object = None) -> None:
         """
-        Initializes a new instance of the Field class.
-
-        Parameters:
-        - field_type (str): The type of the field (e.g., mountains, plains, forest, desert, water, ...).
-        - properties (dict): Optional. Properties associated with the field.
-        - active_object (list of (obj - not implemented yet)): Optional. objects active in this field
-
-        Returns:
-        - object field
+        Initialization of a Field (square on the map)
+        :param field_type: Type of the field as an FieldType Object
+        :param active_objects: Not implemented yet
+        :param properties: Not implemented yet
         """
+        if field_type is not None and field_type not in FieldType:
+            raise ModuleNotFoundError(f'field type "{field_type}" not found \n Possible types are:{list(FieldType)}')
 
-        # check if field type is correct
-        if field_type is not None and field_type.lower() not in self.__possible_fields_types:
-            raise ModuleNotFoundError(f'field type "{field_type}" not found\n Possible types are: {self.__possible_fields_types}')
-        
-        self._field_type = field_type if field_type else random.choice(self.__possible_fields_types)
+        self._field_type = field_type if field_type else random.choice(list(FieldType))
         self._properties = properties if properties else {}
-        self._objects = []
+        self._active_objects = []
         
         if active_objects is not None:
-            self.objects.extend(active_objects)
+            self._active_objects.extend(active_objects)
 
         self._enemy_present = False
         self._player_present = False
@@ -35,79 +36,42 @@ class Field:
     def __eq__(self, other):
         if other is None or not isinstance(other, Field):
             return False
-        if self._field_type != other.get_fiel_type():
+        if self._field_type != other.get_field_type():
             return False
         if self._properties != other.get_properties():
             return False
-        if self._objects != other.get_objects():
+        if self._active_objects != other.get_active_objects():
             return False
         if self._enemy_present != other.is_enemy_present():
             return False
         if self._player_present != other.is_player_present():
             return False
-        
         return True
 
-    def get_field_type(self):
+    def get_field_type(self) -> FieldType:
         return self._field_type
 
     def get_properties(self):
         return self._properties
 
-    def get_objects(self):
-        return self._objects
+    def get_active_objects(self) -> list:
+        return self._active_objects
 
-    def is_player_present(self):
+    def is_player_present(self) -> bool:
         return self._player_present
 
-    def is_enemy_present(self):
+    def is_enemy_present(self) -> bool:
         return self._enemy_present
 
-    def add_object(self, object):
-        """
-        Adds an object to the field.
+    def add_active_object(self, active_object) -> None:  # todo pridat typovanie - co je to zac?
+        self._active_objects.append(active_object)
 
-        Parameters:
-        - object: The object to be added.
+    def remove_object(self, active_object) -> None:  # todo pridat typovanie
+        if active_object in self._active_objects:
+            self._active_objects.remove(active_object)
 
-        Returns:
-        - None
-        """
-        self._objects.append(object)
-
-    def remove_object(self, object):
-        """
-        Removes an object from the field.
-
-        Parameters:
-        - object: The object to be removed.
-
-        Returns:
-        - None
-        """
-        if object in self._objects:
-            self._objects.remove(object)
-
-    def set_player_presence(self, present):
-        """
-        Sets the presence of a player on the field.
-
-        Parameters:
-        - present (bool): True if a player is present, False otherwise.
-
-        Returns:
-        - None
-        """
+    def set_player_present(self, present: bool) -> None:
         self._player_present = present
 
-    def enemy_presence(self, present):
-        """
-        Sets the presence of an enemy on the field.
-
-        Parameters:
-        - present (bool): True if an enemy is present, False otherwise.
-
-        Returns:
-        - None
-        """
+    def set_enemy_present(self, present: bool) -> None:
         self._enemy_present = present
