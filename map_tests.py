@@ -58,12 +58,60 @@ def test_move_down():
     assert map_obj._dat.player_pos[0] == initial_pos[0]
     assert map_obj._dat.player_pos[1] == initial_pos[1] + 1
 
-def test_move_down():
+
+def test_move_down_to_border():
+    
+    limit_border_bottom = 99
+
     map_obj = Map(None, None)
     map_obj.generate_map()
 
-    initial_pos = map_obj._dat.player_pos.copy()
-    map_obj.move(1073741905)  # The key code for the down arrow key
+    
+        
+    [map_obj.move(1073741905) for i in range(0,150)]
+        
+   
+    assert map_obj._dat.player_pos[1] == limit_border_bottom
 
-    assert map_obj._dat.player_pos[0] == initial_pos[0]
-    assert map_obj._dat.player_pos[1] == initial_pos[1] + 1
+def test_move_up_to_border():
+    
+    limit_border_bottom = 0
+
+    map_obj = Map(None, None)
+    map_obj.generate_map()
+
+    
+        
+    [map_obj.move(1073741906) for i in range(0,150)]
+        
+   
+    assert map_obj._dat.player_pos[1] == limit_border_bottom
+
+
+def test_move_left_to_border():
+    
+    limit_border_bottom = 0
+
+    map_obj = Map(None, None)
+    map_obj.generate_map()
+
+    
+        
+    [map_obj.move(1073741904) for i in range(0,150)]
+        
+   
+    assert map_obj._dat.player_pos[0] == limit_border_bottom
+
+def test_move_right_to_border():
+    
+    limit_border_bottom = 99
+
+    map_obj = Map(None, None)
+    map_obj.generate_map()
+
+    
+        
+    [map_obj.move(1073741903) for i in range(0,150)]
+        
+   
+    assert map_obj._dat.player_pos[0] == limit_border_bottom
