@@ -2,6 +2,7 @@ import pygame
 import sys
 
 from enum import Enum
+from enums import Key
 from map import Map
 from menu import Menu
 
@@ -76,13 +77,13 @@ def handle_keys():
             map.move(i)
             if DEBUG_KEY:
                 match i:
-                    case 1073741903:
+                    case Key.RIGHT.value:
                         print("right")
-                    case 1073741904:
+                    case Key.LEFT.value:
                         print("left")
-                    case 1073741905:
+                    case Key.DOWN.value:
                         print("down")
-                    case 1073741906:
+                    case Key.UP.value:
                         print("up")
                     case _:
                         print("Achievement unlocked: How did we get here?")

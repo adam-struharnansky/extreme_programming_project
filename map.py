@@ -50,33 +50,24 @@ class Map:
 
     def generate_map(self, row_number: int = 100, column_number: int = 100):
         self._dat = self.Data()
-        self._row_number = row_number
-        self._column_number = column_number
-
-        self._dat.map = [[Field() for _ in range(self._column_number)] for _ in range(self._row_number)]
+        self._dat.map = [[Field() for _ in range(column_number)] for _ in range(row_number)]
         self._dat.player = Player()
-        # todo - toto trochu smrdi. Ak chceme zmenit to, kde je hrac, tak sa musia zmenit dve premenne - preco nestaci jedna?
-        self._dat.player_pos = [random.randint(0, self._row_number - 1), random.randint(0, self._column_number - 1)]
-
+        self._dat.player_pos = [random.randint(0, row_number - 1), random.randint(0, column_number - 1)]
 
     def move(self, direction):
         match direction:
             case Key.RIGHT.value:
                 self._dat.player_pos[0] += 1
+                self._dat.player_pos[0] = min(len(self._dat.map) - 1, self._dat.player_pos[0])
             case Key.LEFT.value:
                 self._dat.player_pos[0] -= 1
+                self._dat.player_pos[0] = max(0, self._dat.player_pos[0])
             case Key.DOWN.value:
                 self._dat.player_pos[1] += 1
+                self._dat.player_pos[1] = min(len(self._dat.map[0]) - 1, self._dat.player_pos[1])
             case Key.UP.value:
                 self._dat.player_pos[1] -= 1
-
-        # todo presunut toto do caseov - netreba vzdy kontrolovat vsetko a pridat base case scenario - asi vyhodit vynimku?
-        # alebo nerobit nic?
-        self._dat.player_pos[0] = max(0, self._dat.player_pos[0])
         self._dat.player_pos[1] = max(0, self._dat.player_pos[1])
-        self._dat.player_pos[0] = min(len(self._dat.map) - 1, self._dat.player_pos[0])
-        self._dat.player_pos[1] = min(len(self._dat.map[0]) - 1, self._dat.player_pos[1])
-
         if self.DEBUG:
             print("Player pos:", self._dat.player_pos)
 
