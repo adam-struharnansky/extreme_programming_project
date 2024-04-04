@@ -13,6 +13,12 @@ class FieldType(Enum):
 
 class Field:
 
+    _field_type = None
+    _enemy_present = None
+    _player_present = None
+    _active_objects = None
+    _properties = None
+
     def __init__(self, field_type: FieldType = None, active_objects: list = None, properties: object = None) -> None:
         """
         Initialization of a Field (square on the map)
