@@ -25,6 +25,7 @@ class Map:
         self._screen = screen
         self._stat_tab = stat_tab  #pygame surface for displaying stats
         self._file = file
+        pygame.font.init()
         self._font = pygame.font.SysFont('Arial', 30)
         self._background_color = WHITE
 
