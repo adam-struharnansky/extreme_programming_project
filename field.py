@@ -15,7 +15,6 @@ class Field:
 
     _field_type = None
     _enemy_present = None
-    _player_present = None
     _active_objects = None
     _properties = None
 
@@ -37,7 +36,6 @@ class Field:
             self._active_objects.extend(active_objects)
 
         self._enemy_present = False
-        self._player_present = False
 
     def __eq__(self, other):
         if other is None or not isinstance(other, Field):
@@ -50,8 +48,6 @@ class Field:
             return False
         if self._enemy_present != other.is_enemy_present():
             return False
-        if self._player_present != other.is_player_present():
-            return False
         return True
 
     def get_field_type(self) -> FieldType:
@@ -63,8 +59,6 @@ class Field:
     def get_active_objects(self) -> list:
         return self._active_objects
 
-    def is_player_present(self) -> bool:
-        return self._player_present
 
     def is_enemy_present(self) -> bool:
         return self._enemy_present
@@ -76,8 +70,6 @@ class Field:
         if active_object in self._active_objects:
             self._active_objects.remove(active_object)
 
-    def set_player_present(self, present: bool) -> None:
-        self._player_present = present
 
     def set_enemy_present(self, present: bool) -> None:
         self._enemy_present = present
