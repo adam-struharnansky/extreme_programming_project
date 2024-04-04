@@ -19,7 +19,7 @@ class Map:
             self.player = Player()
 
     def __init__(self, screen: pygame.Surface, stat_tab: object, file: str = 'data/map2.pickle',
-                 row_number: int = 100, column_number: int = 100, debug: bool = False) \
+                 debug: bool = False) \
             -> None:
         self._dat = self.Data()
         self._screen = screen
@@ -27,8 +27,7 @@ class Map:
         self._file = file
         self._font = pygame.font.SysFont('Arial', 30)
         self._background_color = WHITE
-        self._row_number = row_number
-        self._column_number = column_number
+
         self.DEBUG = debug
 
     def save_map(self, file: str = None) -> None:
@@ -75,8 +74,8 @@ class Map:
         # alebo nerobit nic?
         self._dat.player_pos[0] = max(0, self._dat.player_pos[0])
         self._dat.player_pos[1] = max(0, self._dat.player_pos[1])
-        self._dat.player_pos[0] = min(self._row_number, self._dat.player_pos[0])
-        self._dat.player_pos[1] = min(self._column_number, self._dat.player_pos[1])
+        self._dat.player_pos[0] = min(len(self._dat.map) - 1, self._dat.player_pos[0])
+        self._dat.player_pos[1] = min(len(self._dat.map[0]) - 1, self._dat.player_pos[1])
 
         if self.DEBUG:
             print("Player pos:", self._dat.player_pos)
