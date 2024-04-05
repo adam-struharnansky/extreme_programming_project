@@ -102,12 +102,12 @@ class Map:
         text = ""
         text += "Att: " + str(self._dat.player.get_real_attack())
         text += " | Def: " + str(self._dat.player.get_real_defence())
-        text += " | Evs: " + str(self._dat.player.get_evasion())
-        text += " | Spd: " + str(self._dat.player.get_speed())
-        text += " | Lvl: " + str(self._dat.player.get_level())
-        text += " | XP: " + str(self._dat.player.get_defence()) + "/" + str(
-            self._dat.player.get_next_level_experience())
-        text += " | HP: " + str(self._dat.player.get_health()) + "/" + str(self._dat.player.get_max_health())
+        text += " | Evs: " + str(self._dat.player.evasion)
+        text += " | Spd: " + str(self._dat.player.speed)
+        text += " | Lvl: " + str(self._dat.player.level)
+        text += " | XP: " + str(self._dat.player.defence) + "/" + str(
+            self._dat.player.next_level_experience)
+        text += " | HP: " + str(self._dat.player.health) + "/" + str(self._dat.player.max_health)
 
         text_surface = self._font.render(text, False, WHITE)
         self._stat_tab.fill(BLACK)
@@ -117,17 +117,17 @@ class Map:
         x = 2 * (FIELD_SIZE + 5)
         y = 2 * (FIELD_SIZE + 5)
         # drawing base player
-        image = pygame.image.load(self._dat.player.get_picture_path())
+        image = pygame.image.load(self._dat.player.picture_path)
         self._screen.blit(image, (x, y))
         # drawing armory on top of the base player
         for armor in self._dat.player.get_equipment():
             if armor:
-                self._screen.blit(pygame.image.load(armor.get_picture_path()), (x, y))
+                self._screen.blit(pygame.image.load(armor.picture_path), (x, y))
 
     def draw_enemies(self):
         for row_number, row in enumerate(self._dat.map):
             for column_number, field in enumerate(row):
-                if field.is_enemy_present():
+                if field.enemy_present:
                     y = (FIELD_SIZE + 5) * row_number
                     x = (FIELD_SIZE + 5) * column_number
                     # todo: Vykreslit nepriatela
@@ -142,5 +142,5 @@ class Map:
                     x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
                     y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
                     field = self._dat.map[row][column]
-                    image = pygame.image.load(field.get_picture_path())
+                    image = pygame.image.load(field.picture_path)
                     self._screen.blit(image, (x, y))

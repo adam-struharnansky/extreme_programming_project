@@ -86,13 +86,13 @@ def handle_keys():
                 from enums import ItemLevel
                 tmp_rnd = random.random()
                 if tmp_rnd <= 0.25:
-                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
+                    game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
                 elif 0.25 < tmp_rnd <= 0.5:
-                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
+                    game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
                 elif 0.5 < tmp_rnd <= 0.75:
-                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
+                    game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
                 else:
-                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.LEGENDARY))
+                    game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.LEGENDARY))
                 # -----------------------------------------------------------------------------------------------
 
 

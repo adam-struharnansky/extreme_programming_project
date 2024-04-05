@@ -4,12 +4,9 @@ from item import Item
 
 
 class Potion(Item):
-    def __init__(
-        self,
-        potion_type: PotionType = None,
-        potion_size: PotionSize = None,
-        potion_level: PotionLevel = PotionLevel.USUAL,
-    ):
+    def __init__(self, potion_type: PotionType = None, potion_size: PotionSize = None,
+                 potion_level: PotionLevel = PotionLevel.USUAL):
+        super().__init__()
         self._potion_type = potion_type
         self._potion_size = potion_size
         self._potion_level = potion_level
@@ -40,13 +37,16 @@ class Potion(Item):
 
         return effect
 
-    def get_potion_type(self):
+    @property
+    def potion_type(self):
         return self._potion_type
 
-    def get_potion_size(self):
+    @property
+    def potion_size(self):
         return self._potion_size
 
-    def get_potion_level(self):
+    @property
+    def potion_level(self):
         return self._potion_level
 
     def get_potion(self):

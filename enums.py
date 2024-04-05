@@ -1,4 +1,4 @@
-from enum import  auto, Enum
+from enum import auto, Enum
 
 
 class Key(Enum):

@@ -10,7 +10,7 @@ from item import Item
 
 class Creature:
 
-    class Equipment:
+    class _Equipment:
         def __init__(self):
             self._head_armor = None
             self._body_armor = None
@@ -22,25 +22,32 @@ class Creature:
         def add_equipment(self, item: Armor):
             if not isinstance(item, Armor):
                 return False
-            match item.get_armor_type():
+            match item.armor_type:
                 case ArmorType.HEAD:
                     if not item.is_other_better(self._head_armor):
                         self._head_armor = item
+                        return True
                 case ArmorType.BODY:
                     if not item.is_other_better(self._body_armor):
                         self._body_armor = item
+                        return True
                 case ArmorType.LEGS:
                     if not item.is_other_better(self._legs_armor):
                         self._legs_armor = item
+                        return True
                 case ArmorType.FEET:
                     if not item.is_other_better(self._feet_armor):
                         self._feet_armor = item
+                        return True
                 case ArmorType.LEFT_ARM:
                     if not item.is_other_better(self._left_hand):
                         self._left_hand = item
+                        return True
                 case ArmorType.RIGHT_ARM:
                     if not item.is_other_better(self._right_hand):
                         self._right_hand = item
+                        return True
+            return False
 
         def get_equipment(self):
             return [self._head_armor, self._right_hand, self._feet_armor, self._body_armor, self._legs_armor,
@@ -53,12 +60,12 @@ class Creature:
                  defence: int = 0,
                  evasion: int = 0,
                  speed: int = 0,
-                 equipment: Equipment = None,
+                 equipment: _Equipment = None,
                  inventory: list = None,
                  effects: list = None) -> None:
         self._effects = effects if effects else []
         self._inventory = inventory if inventory else []
-        self._equipment = equipment if equipment else self.Equipment()
+        self._equipment = equipment if equipment else self._Equipment()
         self._health = health
         self._max_health = max_health
         self._attack = attack
@@ -66,29 +73,36 @@ class Creature:
         self._evasion = evasion
         self._speed = speed
         self._max_inventory = 20  # todo: Nech sa to meni podla levelu
+        self._picture_path = os.path.join('graphics', 'error', 'empty.png')
 
-    def get_health(self) -> int:
+    @property
+    def health(self) -> int:
         return self._health
 
-    def set_health(self, new_health: int) -> None:
+    @health.setter
+    def health(self, new_health: int) -> None:
         self._health = new_health
-
-    def get_max_health(self) -> int:
-        return self._max_health
-
-    def set_max_health(self, new_health: int) -> None:
-        self._max_health = new_health
 
     def change_health(self, health_difference: int) -> None:
         self._health += health_difference
 
-    def heal_max(self) -> None:
+    def heal_to_max(self) -> None:
         self._health = self._max_health
 
-    def get_attack(self) -> int:
+    @property
+    def max_health(self) -> int:
+        return self._max_health
+
+    @max_health.setter
+    def max_health(self, new_health: int) -> None:
+        self._max_health = new_health
+
+    @property
+    def attack(self) -> int:
         return self._attack
 
-    def set_attack(self, new_attack: int) -> None:
+    @attack.setter
+    def attack(self, new_attack: int) -> None:
         self._attack = new_attack
 
     def get_real_attack(self) -> int:
@@ -96,15 +110,20 @@ class Creature:
         Computation of real attack - the combination of base attack with each item in equipment and each active effect.
         :return: Number representing the final attack.
         """
-        real_attack = self.get_attack()
+        real_attack = self.attack
         for armor in self._equipment.get_equipment():
             if armor:
-                real_attack += armor.get_additional_attack()
+                real_attack += armor.additional_attack
         # todo: Pridat zmenu aj z efektov
         return real_attack
 
-    def get_defence(self) -> int:
+    @property
+    def defence(self) -> int:
         return self._defence
+
+    @defence.setter
+    def defence(self, new_defence: int) -> None:
+        self._defence = new_defence
 
     def get_real_defence(self) -> int:
         """
@@ -112,32 +131,33 @@ class Creature:
         effect.
         :return:
         """
-        real_defence = self.get_defence()
+        real_defence = self.defence
         for armor in self._equipment.get_equipment():
             if armor:
-                real_defence += armor.get_additional_defence()
+                real_defence += armor.additional_defence
         # todo: Pridat zmenu aj z efektov
         return real_defence
 
-    def set_defence(self, new_defence: int) -> None:
-        self._defence = new_defence
-
-    def get_evasion(self) -> int:
+    @property
+    def evasion(self) -> int:
         return self._evasion
 
-    def set_evasion(self, new_evasion: int) -> None:
+    @evasion.setter
+    def evasion(self, new_evasion: int) -> None:
         self._evasion = new_evasion
 
-    def get_speed(self) -> int:
+    @property
+    def speed(self) -> int:
         return self._speed
 
-    def set_speed(self, new_speed: int) -> None:
+    @speed.setter
+    def speed(self, new_speed: int) -> None:
         self._speed = new_speed
 
     def get_equipment(self) -> list:
         return self._equipment.get_equipment()
 
-    def add_item_equipment(self, item: Item) -> bool:
+    def add_item_to_equipment(self, item: Item) -> bool:
         """
         Function to add item to equipment. If it is not possible to add item to equipment (equipment is full, the item
         was already inside), the function does nothing and returns False. If the item was successfully added then the
@@ -149,10 +169,11 @@ class Creature:
             return False
         return self._equipment.add_equipment(item)
 
-    def get_inventory(self) -> list:
+    @property
+    def inventory(self) -> list:
         return self._inventory
 
-    def add_item_inventory(self, item: Item) -> bool:
+    def add_item_to_inventory(self, item: Item) -> bool:
         """
         Function to add item to equipment. If it is not possible to add item to inventory (inventory is full),
         the function does nothing and returns False. If the item was successfully added then the function returns True
@@ -164,7 +185,8 @@ class Creature:
         self._inventory.append(item)
         return True
 
-    def get_effects(self) -> list:
+    @property
+    def effects(self) -> list:
         return self._effects
 
     def add_effect(self, effect: Effect) -> None:
@@ -178,9 +200,9 @@ class Creature:
             if self._effect_type == EffectType.HEALTH:
                 self.change_health(change)
             elif self._effect_type == EffectType.SPEED:
-                self.set_speed(self.get_speed() + change)
+                self.set_speed(self.speed + change)
             elif self._effect_type == EffectType.EVASION:
-                self.set_evasion(self.get_evasion() + change)
+                self.set_evasion(self.evasion + change)
             if effect.get_effect_duration == 0:
                 to_delete.append(effect)
         for effect in to_delete:
@@ -189,5 +211,6 @@ class Creature:
     def is_alive(self) -> bool:
         return self._health > 0
 
-    def get_picture_path(self):
-        return os.path.join('graphics', 'error', 'empty.png')
+    @property
+    def picture_path(self) -> str:
+        return self._picture_path

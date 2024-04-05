@@ -17,16 +17,20 @@ class Armor(Item):
         self._additional_defence = additional_defence
         self._picture_path = picture_path if picture_path else os.path.join('graphics', 'empty.png')
 
-    def get_armor_type(self) -> ArmorType:
+    @property
+    def armor_type(self) -> ArmorType:
         return self._armor_type[0]
 
-    def get_armor_level(self) -> ItemLevel:
+    @property
+    def armor_level(self) -> ItemLevel:
         return self._armor_level
 
-    def get_additional_defence(self):
+    @property
+    def additional_defence(self):
         return self._additional_defence
 
-    def get_additional_attack(self):
+    @property
+    def additional_attack(self):
         return self._additional_attack
 
     def is_other_better(self, other: 'Armor' = None):
@@ -34,8 +38,9 @@ class Armor(Item):
             return False
         if not isinstance(other, Armor):
             return False
-        return (self.get_additional_attack() + self.get_additional_defence()) < \
-               (other.get_additional_attack() + other.get_additional_defence())
+        return (self.additional_attack + self.additional_defence) < \
+               (other.additional_attack + other.additional_defence)
 
-    def get_picture_path(self):
+    @property
+    def picture_path(self):
         return self._picture_path

@@ -23,16 +23,19 @@ class Enemy(Creature):
         self._description = description
         self._experience_drop = experience_drop
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         return self._name
 
-    def get_description(self) -> str:
+    @property
+    def description(self) -> str:
         return self._description
 
-    def get_experience_drop(self) -> int:
+    @property
+    def experience_drop(self) -> int:
         return self._experience_drop
 
-    def get_picture_path(self) -> str:
+    def picture_path(self) -> str:
         """
         Overriding Creature function
         """

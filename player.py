@@ -25,46 +25,46 @@ class Player(Creature):
         self._level = level
         self._current_experience = current_experience
         self._next_level_experience = next_level_experience
+        self._picture_path = os.path.join('graphics', 'creatures', 'base_player.png')
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if other is None or not isinstance(other, Player):
             return False
-        if self._health != other.get_health():
+        if self._health != other.health:
             return False
-        if self._max_health != other.get_max_health():
+        if self._max_health != other.max_health:
             return False
-        if self._attack != other.get_attack():
+        if self._attack != other.attack:
             return False
-        if self._defence != other.get_defence():
+        if self._defence != other.defence:
             return False
-        if self._evasion != other.get_evasion():
+        if self._evasion != other.evasion:
             return False
-        if self._speed != other.get_speed():
+        if self._speed != other.speed:
             return False
         if self._equipment != other.get_equipment():
             return False
-        if self._inventory != other.get_inventory():
+        if self._inventory != other.inventory:
             return False
-        if self._effects != other.get_effects():
+        if self._effects != other.effects:
             return False
-        if self._name != other.get_name():
+        if self._name != other.name:
             return False
-        if self._level != other.get_level():
+        if self._level != other.level:
             return False
-        if self._current_experience != other.get_current_experience():
+        if self._current_experience != other.current_experience:
             return False
-        if self._next_level_experience != other.get_next_level_experience():
+        if self._next_level_experience != other.next_level_experience:
             return False
         return True
 
-    def get_name(self):
+    @property
+    def name(self):
         return self._name
 
-    def get_current_experience(self):
+    @property
+    def current_experience(self):
         return self._current_experience
-
-    def get_level(self) -> int:
-        return self._level
 
     def change_experience(self, experience_change: int) -> None:
         self._current_experience += experience_change
@@ -74,16 +74,22 @@ class Player(Creature):
         while self._current_experience >= self._next_level_experience:
             self._level += 1
             self._current_experience -= self._next_level_experience
-            self._next_level_experience = self.get_next_next_level_experience(self._next_level_experience)
+            self._next_level_experience = self.get_next_next_level_experience()
 
-    def get_next_level_experience(self) -> int:
+    @property
+    def level(self) -> int:
+        return self._level
+
+    @property
+    def next_level_experience(self) -> int:
         return self._next_level_experience
 
-    def get_next_next_level_experience(self, current_next_level_experience: int) -> int:
-        return int(current_next_level_experience * 1.5)  # todo - vybalansovat tuto konstantu
+    def get_next_next_level_experience(self) -> int:
+        return int(self._next_level_experience * 1.5)  # todo - vybalansovat tuto konstantu
 
-    def get_picture_path(self) -> str:
+    @property
+    def picture_path(self) -> str:
         """
         Overriding Creature function
         """
-        return os.path.join('graphics', 'creatures', 'base_player.png')
+        return self._picture_path

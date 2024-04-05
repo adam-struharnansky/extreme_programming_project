@@ -22,33 +22,52 @@ class Field:
         
         if active_objects is not None:
             self._active_objects.extend(active_objects)
-
         self._enemy_present = False
+        self._picture_path = os.path.join('graphics', 'error', 'empty.png')
+        match self._field_type:
+            case FieldType.WATER:
+                self._picture_path = os.path.join('graphics', 'map_tiles', 'water.png')
+            case FieldType.FOREST:
+                self._picture_path = os.path.join('graphics', 'map_tiles', 'forest.png')
+            case FieldType.MOUNTAIN:
+                self._picture_path = os.path.join('graphics', 'map_tiles', 'mountain.png')
+            case FieldType.PLAINS:
+                self._picture_path = os.path.join('graphics', 'map_tiles', 'plains.png')
+            case FieldType.DESERT:
+                self._picture_path = os.path.join('graphics', 'map_tiles', 'desert.png')
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if other is None or not isinstance(other, Field):
             return False
-        if self._field_type != other.get_field_type():
+        if self._field_type != other.field_type:
             return False
-        if self._properties != other.get_properties():
+        if self._properties != other.properties:
             return False
-        if self._active_objects != other.get_active_objects():
+        if self._active_objects != other.active_objects:
             return False
-        if self._enemy_present != other.is_enemy_present():
+        if self._enemy_present != other.enemy_present:
             return False
         return True
 
-    def get_field_type(self) -> FieldType:
+    @property
+    def field_type(self) -> FieldType:
         return self._field_type
 
-    def get_properties(self):
+    @property
+    def properties(self):
         return self._properties
 
-    def get_active_objects(self) -> list:
+    @property
+    def active_objects(self) -> list:
         return self._active_objects
 
-    def is_enemy_present(self) -> bool:
+    @property
+    def enemy_present(self) -> bool:
         return self._enemy_present
+
+    @enemy_present.setter
+    def enemy_present(self, present: bool) -> None:
+        self._enemy_present = present
 
     def add_active_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
         self._active_objects.append(active_object)
@@ -57,19 +76,6 @@ class Field:
         if active_object in self._active_objects:
             self._active_objects.remove(active_object)
 
-    def set_enemy_present(self, present: bool) -> None:
-        self._enemy_present = present
-
-    def get_picture_path(self):
-        match self._field_type:
-            case FieldType.WATER:
-                return os.path.join('graphics', 'map_tiles', 'water.png')
-            case FieldType.FOREST:
-                return os.path.join('graphics', 'map_tiles', 'forest.png')
-            case FieldType.MOUNTAIN:
-                return os.path.join('graphics', 'map_tiles', 'mountain.png')
-            case FieldType.PLAINS:
-                return os.path.join('graphics', 'map_tiles', 'plains.png')
-            case FieldType.DESERT:
-                return os.path.join('graphics', 'map_tiles', 'desert.png')
-        return os.path.join('graphics', 'error', 'empty.png')
+    @property
+    def picture_path(self):
+        return self._picture_path
