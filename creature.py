@@ -1,10 +1,50 @@
+
+from armor import Armor
 from effect import Effect
+from enums import ArmorType
 from item import Item
 
 # todo - pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
 
 
 class Creature:
+
+    class Equipment:
+        def __init__(self):
+            self._head_armor = None
+            self._body_armor = None
+            self._legs_armor = None
+            self._feet_armor = None
+            self._right_hand = None
+            self._left_hand = None
+
+        def add_equipment(self, item: Armor):
+            if not isinstance(item, Armor):
+                return False
+            match item.get_armor_type()[0]:  # todo - opravit
+                case ArmorType.HEAD:
+                    if not item.is_better(self._head_armor):
+                        self._head_armor = item
+                case ArmorType.BODY:
+                    if not item.is_better(self._body_armor):
+                        self._body_armor = item
+                case ArmorType.LEGS:
+                    if not item.is_better(self._legs_armor):
+                        self._legs_armor = item
+                case ArmorType.FEET:
+                    if not item.is_better(self._feet_armor):
+                        self._feet_armor = item
+                case ArmorType.LEFT_ARM:
+                    if not item.is_better(self._left_hand):
+                        self._left_hand = item
+                case ArmorType.RIGHT_ARM:
+                    if not item.is_better(self._right_hand):
+                        self._right_hand = item
+
+        def get_equipment(self):
+            return [self._head_armor, self._right_hand, self._feet_armor, self._body_armor, self._legs_armor,
+                    self._left_hand]
+
     def __init__(self,
                  health: int = 0,
                  max_health: int = 1,
@@ -12,13 +52,12 @@ class Creature:
                  defence: int = 0,
                  evasion: int = 0,
                  speed: int = 0,
-                 equipment: list = None,
+                 equipment: Equipment = None,
                  inventory: list = None,
                  effects: list = None) -> None:
         self._effects = effects if effects else []
-        self._inventory = inventory if inventory else []  # todo - chceme mat stackovatelnu inventory?
-        self._equipment = equipment if equipment else []  # todo - nechceme toto urobit zlozitejsie, rozdlit to na casti
-        # aby sme mohli mat iba jeden mec, jeden stit..., ze by sme tu mali prava/lava ruka, hlava, telo, nohy, topanky
+        self._inventory = inventory if inventory else []
+        self._equipment = equipment if equipment else self.Equipment()
         self._health = health
         self._max_health = max_health
         self._attack = attack
@@ -90,7 +129,7 @@ class Creature:
         self._speed = new_speed
 
     def get_equipment(self) -> list:
-        return self._equipment
+        return self._equipment.get_equipment()
 
     def add_item_equipment(self, item: Item) -> bool:
         """
@@ -100,10 +139,7 @@ class Creature:
         :param item: Item to be added
         :return: True if item was added, False otherwise
         """
-        # todo - kontrola - ci to nie je None, ci je to spravny typ, ...
-        # todo kontrola - nechceme mat naraz dva mece, atd
-        self._equipment.append(item)
-        return True
+        return self._equipment.add_equipment(item)  # todo - pozriet ci uz dobredu nedat podmienku
 
     def get_inventory(self) -> list:
         return self._inventory

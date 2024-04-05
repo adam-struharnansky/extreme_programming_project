@@ -59,17 +59,15 @@ class Field:
     def get_active_objects(self) -> list:
         return self._active_objects
 
-
     def is_enemy_present(self) -> bool:
         return self._enemy_present
 
-    def add_active_object(self, active_object) -> None:  # todo pridat typovanie - co je to zac?
+    def add_active_object(self, active_object) -> None:  # todo pridat typovanie - co je to za typ?
         self._active_objects.append(active_object)
 
-    def remove_object(self, active_object) -> None:  # todo pridat typovanie
+    def remove_object(self, active_object) -> None:  # todo pridat typovanie, zo je active_object za typ?
         if active_object in self._active_objects:
             self._active_objects.remove(active_object)
-
 
     def set_enemy_present(self, present: bool) -> None:
         self._enemy_present = present

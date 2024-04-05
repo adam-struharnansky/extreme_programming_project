@@ -1,3 +1,5 @@
+from armor import Armor
+from enums import ItemLevel
 from field import FieldType
 
 
@@ -11,8 +13,13 @@ YELLOW = (255, 255, 0)
 WATER = (0, 0, 255)
 GROUND = (139, 69, 19)
 MOUNTAINS = (128, 128, 128)
-PLAYER_COLOR = (100, 200, 50)
+PLAYER_COLOR = (160, 100, 40)
 ENEMY_COLOR = (255, 0, 0)
+
+BRONZE = (150, 150, 10)
+SILVER = (200, 200, 200)
+GOLD = (220, 220, 30)
+LEGENDARY = (40, 40, 220)
 
 
 def get_field_color(field_type):
@@ -27,4 +34,4 @@ def get_field_color(field_type):
             return GREEN
         case FieldType.WATER:
             return BLUE
-    return BLACK  # todo
+    return BLACK

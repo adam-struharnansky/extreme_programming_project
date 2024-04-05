@@ -87,6 +87,10 @@ def handle_keys():
                         print("up")
                     case _:
                         print("Achievement unlocked: How did we get here?")
+                # todo - docasne, iba pre testovanie, ci funguje pridavanie equipmentu
+                import item_generator
+                map._dat.player.add_item_equipment(item_generator.generate_random_armor())
+
 
 
 # Main loop
