@@ -1,4 +1,3 @@
-from creature import Creature
 from enums import PotionType, PotionSize, PotionLevel, EffectType
 from item import Item
 from effect import Effect
@@ -15,7 +14,7 @@ class Potion(Item):
         self._potion_size = potion_size
         self._potion_level = potion_level
 
-    def use_potion(self, creature: Creature):
+    def use_potion(self):
         effect = None
 
         if self._potion_type == PotionType.HEAL:
@@ -39,8 +38,7 @@ class Potion(Item):
                 EffectType.EVASION, False, self._potion_level, self._potion_size
             )
 
-        if effect:
-            creature.add_effect(effect)
+        return effect
 
     def get_potion_type(self):
         return self._potion_type
