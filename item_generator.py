@@ -2,9 +2,9 @@
 import os
 import random
 
-from enums import ItemLevel, ArmorType
-from item import Item
 from armor import Armor
+from enums import ArmorType, ItemLevel
+from potion import Potion
 
 
 def generate_random_item(item_level: ItemLevel = None) -> Armor:
@@ -21,7 +21,7 @@ def generate_random_item(item_level: ItemLevel = None) -> Armor:
 
 
 def generate_random_armor(item_level: ItemLevel = None) -> Armor:
-    #  todo - vytvorit vsetky itemy ako pickle files, a potom iba z toho nahodne vyberat
+    #  todo: Vytvorit vsetky itemy ako pickle files, a potom iba z toho nahodne vyberat
     item_level = item_level if item_level else ItemLevel.BRONZE
     armor_type = random.choices(list(ArmorType))
 
@@ -76,6 +76,6 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
     return Armor(armor_type, item_level, additional_attack, additional_defence, path)
 
 
-def generate_random_potion():
-    # todo - vygenerovat nahodny potion
+def generate_random_potion() -> Potion:
+    # todo: Vygenerovat nahodny potion
     return None

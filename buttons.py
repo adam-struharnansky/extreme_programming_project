@@ -1,12 +1,12 @@
 import pygame
 
-from colors import *
+from colors import BLACK, WHITE
 
 
 class Button:
     def __init__(self, x: int, y: int, width: int, height: int, text: str, screen: pygame.Surface) -> None:
         """
-        Create a button with given parameters on the screen.
+        Create a button with given parameters on the screen
         :param x: Left-most point of the button
         :param y: Upper-most point of the button
         :param width: Width of the button

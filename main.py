@@ -2,51 +2,41 @@ import pygame
 import sys
 
 from colors import WHITE
-from enum import Enum
-from enums import Key
+from enums import GameState, Key
 from map import Map
 from menu import Menu
-
-
-class GameState(Enum):
-    MENU = 0
-    LOADING_NEW_GAME = 1
-    LOADING_EXISTING_GAME = 2
-    PLAYING_GAME = 3
-
-
-pygame.init()
-
-size = width, height = 700, 770
-screen = pygame.display.set_mode(size)
-
-screen1_size = (width, 50)
-screen2_size = (width, height - 50)
-
-screen1 = pygame.Surface(screen1_size)
-screen2 = pygame.Surface(screen2_size)
 
 DEBUG_ALL = False
 DEBUG_KEY = True
 DEBUG_MOVE = True
+SIZE = WIDTH, HEIGHT = 700, 770
+MENU_HEIGHT = 50
+BACKGROUND_COLOR = WHITE
+
+pygame.init()
+screen = pygame.display.set_mode(SIZE)
+
+menu_screen_size = (WIDTH, MENU_HEIGHT)
+map_screen_size = (WIDTH, HEIGHT - MENU_HEIGHT)
+
+menu_screen = pygame.Surface(menu_screen_size)
+map_screen = pygame.Surface(map_screen_size)
 
 pygame.display.set_caption('Pygame Basic Window')
-
-background_color = WHITE
 
 state_of_game = GameState.MENU
 key_states = {}  # left, right, up, down
 saving = False
 
-# tu bude zadefinovanie classes ak je potrebne
 menu = Menu(screen)
-map = Map(screen2, screen1, debug=DEBUG_ALL or DEBUG_MOVE)
+game_map = Map(map_screen, menu_screen, debug=DEBUG_ALL or DEBUG_MOVE)
 
 
 def handle_keys():
     keys = pygame.key.get_pressed()
-    screen.blit(screen1, (0, 0))
-    screen.blit(screen2, (0, 50))
+    screen.blit(menu_screen, (0, 0))
+    screen.blit(map_screen, (0, MENU_HEIGHT))
+    # todo: Zmenit tieto magicke konstanty na nejaky enum
 
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if key_states[pygame.K_RIGHT] < 1:
@@ -75,7 +65,7 @@ def handle_keys():
     for i in key_states.keys():
         if key_states[i] == 1:
             key_states[i] = 2
-            map.move(i)
+            game_map.move(i)
             if DEBUG_KEY:
                 match i:
                     case Key.RIGHT.value:
@@ -90,19 +80,19 @@ def handle_keys():
                         print("Achievement unlocked: How did we get here?")
                 # ----------------------------------------------------------------------------------------------
                 # docasne, iba pre testovanie, ci funguje pridavanie equipmentu
-                # todo - presunut toto do do map.py, kde to bude spustene ked hrac pride na policko s loot-om
+                # todo: Presunut toto do do map.py, kde to bude spustene ked hrac pride na policko s loot-om
                 import item_generator
                 import random
                 from enums import ItemLevel
                 tmp_rnd = random.random()
                 if tmp_rnd <= 0.25:
-                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
+                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
                 elif 0.25 < tmp_rnd <= 0.5:
-                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
+                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
                 elif 0.5 < tmp_rnd <= 0.75:
-                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
+                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
                 else:
-                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.LEGENDARY))
+                    game_map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.LEGENDARY))
                 # -----------------------------------------------------------------------------------------------
 
 
@@ -115,7 +105,7 @@ while True:
             pygame.quit()
             sys.exit()
 
-    screen.fill(background_color)
+    screen.fill(BACKGROUND_COLOR)
 
     if state_of_game == GameState.MENU:
         menu.draw_base_menu()
@@ -136,17 +126,17 @@ while True:
             break
 
     if state_of_game == GameState.LOADING_NEW_GAME:
-        map.generate_map()
-        map.draw()
+        game_map.generate_map()
+        game_map.draw()
         state_of_game = GameState.PLAYING_GAME
     if state_of_game == GameState.LOADING_EXISTING_GAME:
-        map.load_map()
-        map.draw()
+        game_map.load_map()
+        game_map.draw()
         state_of_game = GameState.PLAYING_GAME
 
     if state_of_game == GameState.PLAYING_GAME:
         handle_keys()
-        map.draw()
+        game_map.draw()
         menu.draw_in_game_buttons()
 
         for button in menu.in_game_buttons:
@@ -161,7 +151,7 @@ while True:
             if DEBUG_ALL:
                 print("Map saved")
             saving = True
-            map.save_map()
+            game_map.save_map()
         elif response == "Exit to Menu":
             state_of_game = GameState.MENU
         elif response is None:

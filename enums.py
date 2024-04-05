@@ -1,4 +1,4 @@
-from enum import Enum, IntEnum, auto
+from enum import  auto, Enum
 
 
 class Key(Enum):
@@ -57,3 +57,10 @@ class FieldType(Enum):
     FOREST = 'forest'
     DESERT = 'desert'
     WATER = 'water'
+
+
+class GameState(Enum):
+    MENU = 0
+    LOADING_NEW_GAME = 1
+    LOADING_EXISTING_GAME = 2
+    PLAYING_GAME = 3

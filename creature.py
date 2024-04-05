@@ -5,7 +5,7 @@ from effect import Effect
 from enums import ArmorType, EffectType
 from item import Item
 
-# todo - pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
+# todo: Pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
 
 
 class Creature:
@@ -65,7 +65,7 @@ class Creature:
         self._defence = defence
         self._evasion = evasion
         self._speed = speed
-        self._max_inventory = 20  # todo - nech sa to meni podla levelu
+        self._max_inventory = 20  # todo: Nech sa to meni podla levelu
 
     def get_health(self) -> int:
         return self._health
@@ -100,7 +100,7 @@ class Creature:
         for armor in self._equipment.get_equipment():
             if armor:
                 real_attack += armor.get_additional_attack()
-        # todo + pridat aj z efektov
+        # todo: Pridat zmenu aj z efektov
         return real_attack
 
     def get_defence(self) -> int:
@@ -116,7 +116,7 @@ class Creature:
         for armor in self._equipment.get_equipment():
             if armor:
                 real_defence += armor.get_additional_defence()
-        # todo + pridat aj z efektov
+        # todo: Pridat zmenu aj z efektov
         return real_defence
 
     def set_defence(self, new_defence: int) -> None:
@@ -141,7 +141,7 @@ class Creature:
         """
         Function to add item to equipment. If it is not possible to add item to equipment (equipment is full, the item
         was already inside), the function does nothing and returns False. If the item was successfully added then the
-        function returns True.
+        function returns True
         :param item: Item to be added
         :return: True if item was added, False otherwise
         """
@@ -155,7 +155,7 @@ class Creature:
     def add_item_inventory(self, item: Item) -> bool:
         """
         Function to add item to equipment. If it is not possible to add item to inventory (inventory is full),
-        the function does nothing and returns False. If the item was successfully added then the function returns True.
+        the function does nothing and returns False. If the item was successfully added then the function returns True
         :param item: Item to be added
         :return: True if item was added, False otherwise
         """
@@ -168,7 +168,7 @@ class Creature:
         return self._effects
 
     def add_effect(self, effect: Effect) -> None:
-        # todo - porozmyslat ci mozeme mat viacnasobne ten isty effekt. Ak nie, pridat na to kontrolu
+        # todo: Porozmyslat ci mozeme mat viacnasobne ten isty effekt. Ak nie, pridat na to kontrolu
         self._effects.append(effect)
 
     def tick_effects(self) -> None:
