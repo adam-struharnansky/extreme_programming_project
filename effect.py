@@ -21,9 +21,9 @@ class Effect:
         if self._effect_type == EffectType.HEALTH:
             creature.change_health(change)
         elif self._effect_type == EffectType.SPEED:
-            creature.change_speed(change)
+            creature.set_speed(creature.get_speed() + change)
         elif self._effect_type == EffectType.EVASION:
-            creature.change_evasion(change)
+            creature.set_evasion(creature.get_evasion() + change)
 
     def get_effect_duration(self):
         return self._effect_duration
