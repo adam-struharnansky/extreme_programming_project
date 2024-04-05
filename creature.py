@@ -21,7 +21,7 @@ class Creature:
         def add_equipment(self, item: Armor):
             if not isinstance(item, Armor):
                 return False
-            match item.get_armor_type()[0]:  # todo - opravit
+            match item.get_armor_type():
                 case ArmorType.HEAD:
                     if not item.is_better(self._head_armor):
                         self._head_armor = item
@@ -64,6 +64,7 @@ class Creature:
         self._defence = defence
         self._evasion = evasion
         self._speed = speed
+        self._max_inventory = 20  # todo - nech sa to meni podla levelu
 
     def get_health(self) -> int:
         return self._health
@@ -95,7 +96,8 @@ class Creature:
         :return: Number representing the final attack.
         """
         real_attack = self.get_attack()
-        # todo + pridat aj z equipmentu, porozmyslat ako budu fungovat komba
+        for armor in self._equipment.get_equipment():
+            real_attack += armor.get_additional_attack()
         # todo + pridat aj z efektov
         return real_attack
 
@@ -109,7 +111,8 @@ class Creature:
         :return:
         """
         real_defence = self.get_defence()
-        # todo + pridat aj z equipmentu, porozmyslat ako budu fungovat komba
+        for armor in self._equipment.get_equipment():
+            real_defence += armor.get_additional_defence()
         # todo + pridat aj z efektov
         return real_defence
 
@@ -139,13 +142,12 @@ class Creature:
         :param item: Item to be added
         :return: True if item was added, False otherwise
         """
-        return self._equipment.add_equipment(item)  # todo - pozriet ci uz dobredu nedat podmienku
+        if not isinstance(item, Armor):
+            return False
+        return self._equipment.add_equipment(item)
 
     def get_inventory(self) -> list:
         return self._inventory
-
-    # todo pridat odobratie veci z inventory/equipmentu
-    # todo pridat logiku na presunutie veci z inventory do equipmentu a naopak (ci uz pomocou funkcii alebo inak)
 
     def add_item_inventory(self, item: Item) -> bool:
         """
@@ -154,7 +156,8 @@ class Creature:
         :param item: Item to be added
         :return: True if item was added, False otherwise
         """
-        # todo kontrola ci nie sme prilis plny
+        if len(self._inventory) > self._max_inventory:
+            return False
         self._inventory.append(item)
         return True
 

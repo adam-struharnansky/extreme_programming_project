@@ -1,6 +1,7 @@
 import pygame
 import sys
 
+from colors import WHITE
 from enum import Enum
 from enums import Key
 from map import Map
@@ -31,7 +32,7 @@ DEBUG_MOVE = True
 
 pygame.display.set_caption('Pygame Basic Window')
 
-background_color = (255, 255, 255)
+background_color = WHITE
 
 state_of_game = GameState.MENU
 key_states = {}  # left, right, up, down
@@ -87,13 +88,23 @@ def handle_keys():
                         print("up")
                     case _:
                         print("Achievement unlocked: How did we get here?")
-                # todo - docasne, iba pre testovanie, ci funguje pridavanie equipmentu
+                # ----------------------------------------------------------------------------------------------
+                # docasne, iba pre testovanie, ci funguje pridavanie equipmentu
+                # todo - presunut tuto nahodu do map.py, kde to bude spustene ked hrac pride na policko s loot-om
                 import item_generator
-                map._dat.player.add_item_equipment(item_generator.generate_random_armor())
+                import random
+                from enums import ItemLevel
+                tmp_rnd = random.random()
+                if tmp_rnd <= 0.25:
+                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
+                elif 0.25 < tmp_rnd <= 0.5:
+                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
+                elif 0.5 < tmp_rnd <= 0.75:
+                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
+                else:
+                    map._dat.player.add_item_equipment(item_generator.generate_random_armor(ItemLevel.LEGENDARY))
+                # -----------------------------------------------------------------------------------------------
 
-
-
-# Main loop
 
 while True:
     for event in pygame.event.get():
@@ -106,7 +117,6 @@ while True:
 
     screen.fill(background_color)
 
-    # Spravanie ak sme v menu state_of_game = 0
     if state_of_game == GameState.MENU:
         menu.draw_base_menu()
 
@@ -118,7 +128,6 @@ while True:
         else:
             response = None
 
-        # Kliknutie na button load Game a zmenenie stavu
         if response == "New Game":
             state_of_game = GameState.LOADING_NEW_GAME
         elif response == "Load Game":
@@ -126,7 +135,6 @@ while True:
         elif response == "Exit Game":
             break
 
-    # Nacitanie mapy
     if state_of_game == GameState.LOADING_NEW_GAME:
         map.generate_map()
         map.draw()
@@ -150,7 +158,8 @@ while True:
             response = None
 
         if response == "Save Game" and not saving:
-            print("Map saved")
+            if DEBUG_ALL:
+                print("Map saved")
             saving = True
             map.save_map()
         elif response == "Exit to Menu":

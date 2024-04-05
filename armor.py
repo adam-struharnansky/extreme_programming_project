@@ -13,10 +13,10 @@ class Armor(Item):
         self._armor_level = armor_level if armor_level else random.choice(list(ItemLevel))
         self._additional_attack = additional_attack
         self._additional_defence = additional_defence
-        self._picture_path = picture_path if picture_path else None  # todo - prazdny obrazok
+        self._picture_path = picture_path if picture_path else 'graphics/empty.png'  # todo pomocou os
 
-    def get_armor_type(self) -> ArmorType:  # todo - pochopit ako toto funguje
-        return self._armor_type
+    def get_armor_type(self) -> ArmorType:
+        return self._armor_type[0]
 
     def get_armor_level(self) -> ItemLevel:
         return self._armor_level
