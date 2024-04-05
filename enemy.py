@@ -1,3 +1,5 @@
+import os
+
 from creature import Creature
 
 
@@ -29,3 +31,9 @@ class Enemy(Creature):
 
     def get_experience_drop(self) -> int:
         return self._experience_drop
+
+    def get_picture_path(self) -> str:
+        """
+        Overriding Creature function
+        """
+        return os.path.join('graphics', 'creatures', 'base_enemy.png')

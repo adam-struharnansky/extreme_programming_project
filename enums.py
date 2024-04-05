@@ -49,3 +49,11 @@ class PotionLevel(Enum):
     USUAL = 1
     RARE = 2
     LEGENDARY = 3
+
+
+class FieldType(Enum):
+    MOUNTAIN = 'mountain'
+    PLAINS = 'plains'
+    FOREST = 'forest'
+    DESERT = 'desert'
+    WATER = 'water'

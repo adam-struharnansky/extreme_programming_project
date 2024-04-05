@@ -90,7 +90,7 @@ def handle_keys():
                         print("Achievement unlocked: How did we get here?")
                 # ----------------------------------------------------------------------------------------------
                 # docasne, iba pre testovanie, ci funguje pridavanie equipmentu
-                # todo - presunut tuto nahodu do map.py, kde to bude spustene ked hrac pride na policko s loot-om
+                # todo - presunut toto do do map.py, kde to bude spustene ked hrac pride na policko s loot-om
                 import item_generator
                 import random
                 from enums import ItemLevel

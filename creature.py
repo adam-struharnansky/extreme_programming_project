@@ -1,3 +1,4 @@
+import os.path
 
 from armor import Armor
 from effect import Effect
@@ -97,7 +98,8 @@ class Creature:
         """
         real_attack = self.get_attack()
         for armor in self._equipment.get_equipment():
-            real_attack += armor.get_additional_attack()
+            if armor:
+                real_attack += armor.get_additional_attack()
         # todo + pridat aj z efektov
         return real_attack
 
@@ -112,7 +114,8 @@ class Creature:
         """
         real_defence = self.get_defence()
         for armor in self._equipment.get_equipment():
-            real_defence += armor.get_additional_defence()
+            if armor:
+                real_defence += armor.get_additional_defence()
         # todo + pridat aj z efektov
         return real_defence
 
@@ -185,3 +188,6 @@ class Creature:
 
     def is_alive(self) -> bool:
         return self._health > 0
+
+    def get_picture_path(self):
+        return os.path.join('graphics', 'error', 'empty.png')

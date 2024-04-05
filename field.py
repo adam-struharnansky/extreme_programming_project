@@ -1,22 +1,10 @@
+import os.path
 import random
 
-from enum import Enum
-
-
-class FieldType(Enum):
-    MOUNTAIN = 'mountain'
-    PLAINS = 'plains'
-    FOREST = 'forest'
-    DESERT = 'desert'
-    WATER = 'water'
+from enums import FieldType
 
 
 class Field:
-
-    _field_type = None
-    _enemy_present = None
-    _active_objects = None
-    _properties = None
 
     def __init__(self, field_type: FieldType = None, active_objects: list = None, properties: object = None) -> None:
         """
@@ -62,12 +50,26 @@ class Field:
     def is_enemy_present(self) -> bool:
         return self._enemy_present
 
-    def add_active_object(self, active_object) -> None:  # todo pridat typovanie - co je to za typ?
+    def add_active_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
         self._active_objects.append(active_object)
 
-    def remove_object(self, active_object) -> None:  # todo pridat typovanie, zo je active_object za typ?
+    def remove_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
         if active_object in self._active_objects:
             self._active_objects.remove(active_object)
 
     def set_enemy_present(self, present: bool) -> None:
         self._enemy_present = present
+
+    def get_picture_path(self):
+        match self._field_type:
+            case FieldType.WATER:
+                return os.path.join('graphics', 'map_tiles', 'water.png')
+            case FieldType.FOREST:
+                return os.path.join('graphics', 'map_tiles', 'forest.png')
+            case FieldType.MOUNTAIN:
+                return os.path.join('graphics', 'map_tiles', 'mountain.png')
+            case FieldType.PLAINS:
+                return os.path.join('graphics', 'map_tiles', 'plains.png')
+            case FieldType.DESERT:
+                return os.path.join('graphics', 'map_tiles', 'desert.png')
+        return os.path.join('graphics', 'error', 'empty.png')

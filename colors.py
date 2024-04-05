@@ -1,7 +1,5 @@
 from armor import Armor
-from enums import ItemLevel
-from field import FieldType
-
+from enums import ItemLevel, FieldType
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

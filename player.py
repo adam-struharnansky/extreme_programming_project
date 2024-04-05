@@ -1,3 +1,5 @@
+import os.path
+
 from creature import Creature
 
 
@@ -79,3 +81,9 @@ class Player(Creature):
 
     def get_next_next_level_experience(self, current_next_level_experience:int) -> int:
         return current_next_level_experience * 1.5  # todo - vybalansovat tuto konstantu
+
+    def get_picture_path(self) -> str:
+        """
+        Overriding Creature function
+        """
+        return os.path.join('graphics', 'creatures', 'base_player.png')

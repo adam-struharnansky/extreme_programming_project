@@ -21,7 +21,7 @@ def generate_random_item(item_level: ItemLevel = None) -> Armor:
 
 
 def generate_random_armor(item_level: ItemLevel = None) -> Armor:
-    # todo - vytvorit vsetky itemy ako pickle files, a potom iba z toho nahodne vyberat
+    #  todo - vytvorit vsetky itemy ako pickle files, a potom iba z toho nahodne vyberat
     item_level = item_level if item_level else ItemLevel.BRONZE
     armor_type = random.choices(list(ArmorType))
 
@@ -72,7 +72,7 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
             additional_attack *= 4
             file_name = file_name + '_legendary.png'
 
-    path = os.path.join('graphics', file_name)
+    path = os.path.join('graphics', 'items', 'armor', file_name)
     return Armor(armor_type, item_level, additional_attack, additional_defence, path)
 
 
