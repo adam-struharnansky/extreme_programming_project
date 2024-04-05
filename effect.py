@@ -1,4 +1,3 @@
-from creature import Creature
 from enums import EffectType
 
 
@@ -15,15 +14,10 @@ class Effect:
         self._effect_duration = effect_duration
         self._effect_type = effect_type
 
-    def tick(self, creature: Creature):
+    def tick(self):
         self._effect_duration -= 1
         change = self._effect_level * (-1) if self._is_negative else self._effect_level
-        if self._effect_type == EffectType.HEALTH:
-            creature.change_health(change)
-        elif self._effect_type == EffectType.SPEED:
-            creature.set_speed(creature.get_speed() + change)
-        elif self._effect_type == EffectType.EVASION:
-            creature.set_evasion(creature.get_evasion() + change)
+        return self._effect_type, change
 
     def get_effect_duration(self):
         return self._effect_duration
