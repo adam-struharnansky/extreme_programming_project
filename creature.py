@@ -166,10 +166,14 @@ class Creature:
         self._effects.append(effect)
 
     def tick_effects(self) -> None:
+        to_delete = []
         for effect in self._effects:
-            # effect.tick()
-            # todo
-            pass
+            effect.tick(self)
+            if effect.get_effect_duration == 0:
+                to_delete.append(effect)
+        for effect in to_delete:
+            self._effects.remove(effect)
+        pass
 
     def is_alive(self) -> bool:
         return self._health > 0
