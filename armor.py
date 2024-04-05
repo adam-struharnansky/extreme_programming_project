@@ -1,3 +1,5 @@
+
+import os
 import random
 
 from enums import ArmorType, ItemLevel
@@ -13,7 +15,7 @@ class Armor(Item):
         self._armor_level = armor_level if armor_level else random.choice(list(ItemLevel))
         self._additional_attack = additional_attack
         self._additional_defence = additional_defence
-        self._picture_path = picture_path if picture_path else 'graphics/empty.png'  # todo pomocou os
+        self._picture_path = picture_path if picture_path else os.path.join('graphics', 'empty.png')
 
     def get_armor_type(self) -> ArmorType:
         return self._armor_type[0]
@@ -27,8 +29,10 @@ class Armor(Item):
     def get_additional_attack(self):
         return self._additional_attack
 
-    def is_better(self, other):
+    def is_other_better(self, other: 'Armor' = None):
         if other is None:
+            return False
+        if not isinstance(other, Armor):
             return False
         return (self.get_additional_attack() + self.get_additional_defence()) < \
                (other.get_additional_attack() + other.get_additional_defence())

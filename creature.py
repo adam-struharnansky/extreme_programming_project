@@ -23,22 +23,22 @@ class Creature:
                 return False
             match item.get_armor_type():
                 case ArmorType.HEAD:
-                    if not item.is_better(self._head_armor):
+                    if not item.is_other_better(self._head_armor):
                         self._head_armor = item
                 case ArmorType.BODY:
-                    if not item.is_better(self._body_armor):
+                    if not item.is_other_better(self._body_armor):
                         self._body_armor = item
                 case ArmorType.LEGS:
-                    if not item.is_better(self._legs_armor):
+                    if not item.is_other_better(self._legs_armor):
                         self._legs_armor = item
                 case ArmorType.FEET:
-                    if not item.is_better(self._feet_armor):
+                    if not item.is_other_better(self._feet_armor):
                         self._feet_armor = item
                 case ArmorType.LEFT_ARM:
-                    if not item.is_better(self._left_hand):
+                    if not item.is_other_better(self._left_hand):
                         self._left_hand = item
                 case ArmorType.RIGHT_ARM:
-                    if not item.is_better(self._right_hand):
+                    if not item.is_other_better(self._right_hand):
                         self._right_hand = item
 
         def get_equipment(self):

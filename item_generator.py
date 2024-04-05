@@ -7,16 +7,17 @@ from item import Item
 from armor import Armor
 
 
-def generate_random_item(item_level: ItemLevel = None) -> Item:
+def generate_random_item(item_level: ItemLevel = None) -> Armor:
     item_level = item_level if item_level else ItemLevel.BRONZE
 
-    # todo - dalsie typy itemov, ak vobec sa do tohoto pustime
-    item_types_number = [1]
+    item_types_number = [1, 2]
     generated_item_type = random.choice(item_types_number)
 
     match generated_item_type:
         case 1:
             return generate_random_armor(item_level)
+        case 2:
+            return generate_random_potion()
 
 
 def generate_random_armor(item_level: ItemLevel = None) -> Armor:
@@ -71,6 +72,10 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
             additional_attack *= 4
             file_name = file_name + '_legendary.png'
 
-    path = 'graphics/' + file_name
-    # todo - pouzit os
+    path = os.path.join('graphics', file_name)
     return Armor(armor_type, item_level, additional_attack, additional_defence, path)
+
+
+def generate_random_potion():
+    # todo - vygenerovat nahodny potion
+    return None
