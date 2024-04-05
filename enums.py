@@ -22,3 +22,30 @@ class ItemLevel(Enum):
     SILVER = 1
     GOLD = 2
     LEGENDARY = 3
+
+
+class EffectType(Enum):
+    HEALTH = auto()
+    SPEED = auto()
+    EVASION = auto()
+    IMMORTALITY = auto()
+
+
+class PotionType(Enum):
+    HEAL = "heal"
+    HASTE = "haste"
+    POISON = "poison"
+    SLOW = "slow"
+    EVASION = "evasion"
+
+
+class PotionSize(Enum):
+    SMALL = 1
+    MEDIUM = 2
+    BIG = 3
+
+
+class PotionLevel(Enum):
+    USUAL = 1
+    RARE = 2
+    LEGENDARY = 3
