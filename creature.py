@@ -1,7 +1,7 @@
 
 from armor import Armor
 from effect import Effect
-from enums import ArmorType
+from enums import ArmorType, EffectType
 from item import Item
 
 # todo - pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
@@ -171,12 +171,17 @@ class Creature:
     def tick_effects(self) -> None:
         to_delete = []
         for effect in self._effects:
-            effect.tick(self)
+            effect_type, change = effect.tick()
+            if self._effect_type == EffectType.HEALTH:
+                self.change_health(change)
+            elif self._effect_type == EffectType.SPEED:
+                self.set_speed(self.get_speed() + change)
+            elif self._effect_type == EffectType.EVASION:
+                self.set_evasion(self.get_evasion() + change)
             if effect.get_effect_duration == 0:
                 to_delete.append(effect)
         for effect in to_delete:
             self._effects.remove(effect)
-        pass
 
     def is_alive(self) -> bool:
         return self._health > 0
