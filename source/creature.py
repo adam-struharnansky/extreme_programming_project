@@ -2,7 +2,7 @@ import os.path
 
 from armor import Armor
 from effect import Effect
-from enums import ArmorType, EffectType
+from auxiliary.enums import ArmorType, EffectType
 from item import Item
 
 # todo: Pridat kontrolu do kazdej set funkcie, ci je to spravneho typu

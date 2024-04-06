@@ -3,7 +3,7 @@ import os
 import random
 
 from armor import Armor
-from enums import ArmorType, ItemLevel
+from auxiliary.enums import ArmorType, ItemLevel
 from potion import Potion
 
 
@@ -54,20 +54,20 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
             additional_attack = 2
             file_name = 'feet_armor'
 
-    match item_level:
-        case ItemLevel.BRONZE:
+    match item_level.value:
+        case ItemLevel.BRONZE.value:
             additional_defence *= 1
             additional_attack *= 1
             file_name = file_name + '_bronze.png'
-        case ItemLevel.SILVER:
+        case ItemLevel.SILVER.value:
             additional_defence *= 2
             additional_attack *= 2
             file_name = file_name + '_silver.png'
-        case ItemLevel.GOLD:
+        case ItemLevel.GOLD.value:
             additional_defence *= 3
             additional_attack *= 3
             file_name = file_name + '_gold.png'
-        case ItemLevel.LEGENDARY:
+        case ItemLevel.LEGENDARY.value:
             additional_defence *= 4
             additional_attack *= 4
             file_name = file_name + '_legendary.png'

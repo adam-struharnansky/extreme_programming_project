@@ -1,5 +1,5 @@
 
-from player import *
+from source.player import *
 
 
 def test_player_eq():

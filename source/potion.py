@@ -1,5 +1,6 @@
+
 from effect import Effect
-from enums import EffectType, PotionLevel, PotionSize, PotionType
+from auxiliary.enums import EffectType, PotionLevel, PotionSize, PotionType
 from item import Item
 
 

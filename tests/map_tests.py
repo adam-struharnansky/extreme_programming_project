@@ -1,5 +1,4 @@
-import pytest
-from map import *
+from source.map import *
 
 
 def test_item_duplicity():

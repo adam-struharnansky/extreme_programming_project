@@ -2,7 +2,7 @@
 import os
 import random
 
-from enums import ArmorType, ItemLevel
+from auxiliary.enums import ArmorType, ItemLevel
 from item import Item
 
 

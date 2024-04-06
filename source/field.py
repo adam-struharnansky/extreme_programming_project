@@ -1,7 +1,7 @@
 import os.path
 import random
 
-from enums import FieldType
+from auxiliary.enums import FieldType
 
 
 class Field:

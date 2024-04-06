@@ -1,4 +1,4 @@
-from field import *
+from source.field import *
 
 
 def test_field_eq():
