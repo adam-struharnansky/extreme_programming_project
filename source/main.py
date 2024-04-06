@@ -81,9 +81,9 @@ def handle_keys():
                 # ----------------------------------------------------------------------------------------------
                 # docasne, iba pre testovanie, ci funguje pridavanie equipmentu
                 # todo: Presunut toto do do map.py, kde to bude spustene ked hrac pride na policko s loot-om
-                from source import item_generator
+                import item_generator
                 import random
-                from source.auxiliary.enums import ItemLevel
+                from auxiliary.enums import ItemLevel
                 tmp_rnd = random.random()
                 if tmp_rnd <= 0.25:
                     game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))

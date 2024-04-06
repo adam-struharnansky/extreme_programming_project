@@ -1,5 +1,5 @@
 
-from source.auxiliary.enums import FieldType
+from auxiliary.enums import FieldType
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

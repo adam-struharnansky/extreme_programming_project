@@ -11,6 +11,7 @@ from player import Player
 
 FIELD_SIZE = 135
 OFFSET = 2
+ABS_PATH = os.path.dirname(os.path.dirname(__file__))
 
 
 class Map:
@@ -117,12 +118,12 @@ class Map:
         x = 2 * (FIELD_SIZE + 5)
         y = 2 * (FIELD_SIZE + 5)
         # drawing base player
-        image = pygame.image.load(self._dat.player.picture_path)
+        image = pygame.image.load(ABS_PATH+"//"+self._dat.player.picture_path)
         self._screen.blit(image, (x, y))
         # drawing armory on top of the base player
         for armor in self._dat.player.get_equipment():
             if armor:
-                self._screen.blit(pygame.image.load(armor.picture_path), (x, y))
+                self._screen.blit(pygame.image.load(ABS_PATH+"//"+armor.picture_path), (x, y))
 
     def draw_enemies(self):
         for row_number, row in enumerate(self._dat.map):
@@ -142,5 +143,5 @@ class Map:
                     x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
                     y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
                     field = self._dat.map[row][column]
-                    image = pygame.image.load(field.picture_path)
+                    image = pygame.image.load(ABS_PATH+"//"+field.picture_path)
                     self._screen.blit(image, (x, y))
