@@ -44,14 +44,14 @@ class Map:
         """
         if file is None:
             map_number = len(os.listdir('../data'))
-            file = f'data/map{map_number}.pickle'
+            file = ABS_PATH+"//"+f'data/map{map_number}.pickle'
         with open(file, 'wb') as f:
             pickle.dump(self._dat, f)
 
     def load_map(self, file: str = None) -> None:
         if file is None:
             file = self._file
-        with open(file, 'rb') as f:
+        with open(ABS_PATH+"//"+file, 'rb') as f:
             self._dat = pickle.load(f)
 
     def generate_enemies(self, row_number: int = 100, column_number: int = 100) -> None:
