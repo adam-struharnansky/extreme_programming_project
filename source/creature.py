@@ -1,4 +1,5 @@
 import os.path
+import random
 
 from armor import Armor
 from effect import Effect
@@ -146,6 +147,18 @@ class Creature:
     def evasion(self, new_evasion: int) -> None:
         self._evasion = new_evasion
 
+    def get_real_evasion(self) -> int:
+        """
+        Computation of real evasion - the combination of base evasion with each item in equipment and each active
+        effect.
+        :return:
+        """
+        real_evasion = self.evasion
+        for effect in self._effects:
+            if effect.effect_type == EffectType.EVASION:
+                real_evasion += effect.get_change()
+        return real_evasion
+
     @property
     def speed(self) -> int:
         return self._speed
@@ -153,6 +166,18 @@ class Creature:
     @speed.setter
     def speed(self, new_speed: int) -> None:
         self._speed = new_speed
+    
+    def get_real_speed(self) -> int:
+        """
+        Computation of real speed - the combination of base speed with each item in equipment and each active
+        effect.
+        :return:
+        """
+        real_speed = self.speed
+        for effect in self.effects:
+            if effect.effect_type == EffectType.SPEED:
+                real_speed += effect.get_change()
+        return real_speed
 
     def get_equipment(self) -> list:
         return self._equipment.get_equipment()
@@ -190,23 +215,29 @@ class Creature:
         return self._effects
 
     def add_effect(self, effect: Effect) -> None:
-        # todo: Porozmyslat ci mozeme mat viacnasobne ten isty effekt. Ak nie, pridat na to kontrolu
-        self._effects.append(effect)
+        # ak existuje taky isty effect aktualizuje jeho duration
+        if effect in self._effects:
+            self._effects[self._effects.index(effect)].effect_duration=effect.effect_duration
+        elif effect:
+            self._effects.append(effect)
 
     def tick_effects(self) -> None:
         to_delete = []
         for effect in self._effects:
             effect_type, change = effect.tick()
-            if self._effect_type == EffectType.HEALTH:
+            if effect_type == EffectType.HEALTH:
                 self.change_health(change)
-            elif self._effect_type == EffectType.SPEED:
-                self.set_speed(self.speed + change)
-            elif self._effect_type == EffectType.EVASION:
-                self.set_evasion(self.evasion + change)
-            if effect.get_effect_duration == 0:
+            if effect.effect_duration == 0:
                 to_delete.append(effect)
+
         for effect in to_delete:
             self._effects.remove(effect)
+
+    def use_random_potion(self):
+        if(self._inventory):
+            rnd = random.randint(0, len(self._inventory)-1)
+            self.add_effect(self._inventory[rnd].use_potion())
+            self._inventory.remove(self._inventory[rnd])
 
     def is_alive(self) -> bool:
         return self._health > 0

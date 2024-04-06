@@ -3,12 +3,13 @@ import os
 import random
 
 from armor import Armor
-from auxiliary.enums import ArmorType, ItemLevel
+from auxiliary.enums import ArmorType, ItemLevel, PotionLevel
 from potion import Potion
 
 
 def generate_random_item(item_level: ItemLevel = None) -> Armor:
     item_level = item_level if item_level else ItemLevel.BRONZE
+    potion_level = potion_level if potion_level else PotionLevel.USUAL
 
     item_types_number = [1, 2]
     generated_item_type = random.choice(item_types_number)
@@ -17,7 +18,7 @@ def generate_random_item(item_level: ItemLevel = None) -> Armor:
         case 1:
             return generate_random_armor(item_level)
         case 2:
-            return generate_random_potion()
+            return generate_random_potion(potion_level)
 
 
 def generate_random_armor(item_level: ItemLevel = None) -> Armor:
@@ -76,6 +77,6 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
     return Armor(armor_type, item_level, additional_attack, additional_defence, path)
 
 
-def generate_random_potion() -> Potion:
+def generate_random_potion(potion_level: PotionLevel = None) -> Potion:
     # todo: Vygenerovat nahodny potion
-    return None
+    return Potion(None, None, potion_level)

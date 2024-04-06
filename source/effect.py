@@ -14,17 +14,33 @@ class Effect:
         self._effect_duration = effect_duration
         self._effect_type = effect_type
 
+    def __eq__(self, other) -> bool:
+        if self._effect_type != other.effect_type:
+            return False
+        elif self.get_change() != other.get_change():
+            return False
+        return True
+    
     def tick(self):
         self._effect_duration -= 1
-        change = self._effect_level * (-1) if self._is_negative else self._effect_level
-        return self._effect_type, change
+        return self._effect_type, self.get_change()
 
-    def get_effect_duration(self):
+    @property
+    def effect_duration(self):
         return self._effect_duration
-
-    def get_effect_level(self):
+    
+    @effect_duration.setter
+    def effect_duration(self, new_duration: int) -> None:
+        self._effect_duration = new_duration
+    
+    @property
+    def effect_level(self):
         return self._effect_level
-
-    def get_effect_type(self):
+    
+    @property
+    def effect_type(self):
         return self._effect_type
+    
+    def get_change(self):
+        return self._effect_level * (-1) if self._is_negative else self._effect_level
 
