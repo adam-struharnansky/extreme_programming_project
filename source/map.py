@@ -18,6 +18,7 @@ class Map:
     class Data:
         def __init__(self):
             self.map = None
+            self.version = 1
             # todo: Odstranit field_size a namiesto toto pouzivat FIELD_SIZE. Treba pritom zmenit verziu pickle suborov!
             self.field_size = 135
             self.player_pos = [0, 0]  # row column
@@ -45,14 +46,20 @@ class Map:
         if file is None:
             map_number = len(os.listdir('../data'))
             file = f'data/map{map_number}.pickle'
-        with open(file, 'wb') as f:
+        with open(ABS_PATH+"//"+file, 'wb') as f:
             pickle.dump(self._dat, f)
 
     def load_map(self, file: str = None) -> None:
         if file is None:
             file = self._file
-        with open(file, 'rb') as f:
+        with open(ABS_PATH+"//"+file, 'rb') as f:
             self._dat = pickle.load(f)
+
+        try:
+            if self._dat.version != Data().version:
+                raise Exception("Bad picle version")
+        except:
+            raise Exception("Bad picle version")
 
     def generate_enemies(self, row_number: int = 100, column_number: int = 100) -> None:
         # todo: Pridat generovanie nepriatelov
@@ -103,8 +110,8 @@ class Map:
         text = ""
         text += "Att: " + str(self._dat.player.get_real_attack())
         text += " | Def: " + str(self._dat.player.get_real_defence())
-        text += " | Evs: " + str(self._dat.player.get_real_evasion())
-        text += " | Spd: " + str(self._dat.player.get_real_speed())
+        text += " | Evs: " + str(self._dat.player.evasion)
+        text += " | Spd: " + str(self._dat.player.speed)
         text += " | Lvl: " + str(self._dat.player.level)
         text += " | XP: " + str(self._dat.player.defence) + "/" + str(
             self._dat.player.next_level_experience)
