@@ -25,10 +25,10 @@ class ItemLevel(Enum):
 
 
 class EffectType(Enum):
-    HEALTH = auto()
-    SPEED = auto()
-    EVASION = auto()
-    IMMORTALITY = auto()
+    HEALTH = "health"
+    SPEED = "speed"
+    EVASION = "evasion"
+    IMMORTALITY = "immortality"
 
 
 class PotionType(Enum):
@@ -40,9 +40,9 @@ class PotionType(Enum):
 
 
 class PotionSize(Enum):
-    SMALL = 1
-    MEDIUM = 2
-    BIG = 3
+    SMALL = 3
+    MEDIUM = 5
+    BIG = 7
 
 
 class PotionLevel(Enum):
