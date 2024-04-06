@@ -64,3 +64,4 @@ class GameState(Enum):
     LOADING_NEW_GAME = 1
     LOADING_EXISTING_GAME = 2
     PLAYING_GAME = 3
+    LOST_GAME = 4

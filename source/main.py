@@ -84,23 +84,13 @@ def handle_keys():
                 import item_generator
                 import random
                 from auxiliary.enums import ItemLevel
-                from auxiliary.enums import PotionLevel
                 tmp_rnd = random.random()
-                game_map._dat.player.use_random_potion()
-                str = "active effects:\n"
-                for effect in  game_map._dat.player.effects:
-                    str += " %s| %s| %s|\n" % (effect.effect_type.value, effect.get_change(), effect.effect_duration)
-                print(str)
-                game_map._dat.player.tick_effects()
                 if tmp_rnd <= 0.25:
                     game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.BRONZE))
-                    game_map._dat.player.add_item_to_inventory(item_generator.generate_random_potion(PotionLevel.USUAL))
                 elif 0.25 < tmp_rnd <= 0.5:
                     game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.SILVER))
-                    game_map._dat.player.add_item_to_inventory(item_generator.generate_random_potion(PotionLevel.RARE))
                 elif 0.5 < tmp_rnd <= 0.75:
                     game_map._dat.player.add_item_to_equipment(item_generator.generate_random_armor(ItemLevel.GOLD))
-                    game_map._dat.player.add_item_to_inventory(item_generator.generate_random_potion(PotionLevel.LEGENDARY))
                 else:
                     game_map._dat.player.add_item_to_equipment(
                         item_generator.generate_random_armor(ItemLevel.LEGENDARY))
@@ -167,5 +157,18 @@ while True:
             state_of_game = GameState.MENU
         elif response is None:
             saving = False
+
+    if state_of_game == GameState.LOST_GAME:
+        menu.draw_lost_game_buttons()
+        for button in menu.lost_game_buttons:
+            temp_response = button.handle_event(event)
+            if temp_response is not None:
+                response = temp_response
+                break
+        else:
+            response = None
+
+        if response == "Main menu":
+            state_of_game = GameState.MENU
 
     pygame.display.flip()

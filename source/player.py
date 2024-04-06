@@ -6,8 +6,8 @@ from creature import Creature
 class Player(Creature):
 
     def __init__(self,
-                 health: int = 0,
-                 max_health: int = 1,
+                 health: int = 10,
+                 max_health: int = 10,
                  attack: int = 0,
                  defence: int = 0,
                  evasion: int = 0,

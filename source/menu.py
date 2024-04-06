@@ -11,11 +11,13 @@ class Menu:
         self.screen = screen
         self.base_menu_buttons = []
         self.in_game_buttons = []
+        self.lost_game_buttons = []
         self.width_of_screen = info.current_w
         self.height_of_screen = info.current_h
 
         self.create_base_menu()
         self.create_in_game_menu()
+        self.create_lost_game_menu()
 
     def create_base_menu(self):
         new_game = Button(150, 300,  400, 50, "New Game", self.screen)
@@ -40,3 +42,12 @@ class Menu:
     def draw_in_game_buttons(self):
         for button in self.in_game_buttons:
             button.draw()
+
+    def create_lost_game_menu(self):
+        exit_to_menu = Button(150, 300,  400, 50, "Main menu", self.screen)
+        self.lost_game_buttons.append(exit_to_menu)
+
+    def draw_lost_game_buttons(self):
+        for button in self.lost_game_buttons:
+            button.draw()
+    
