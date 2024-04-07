@@ -4,7 +4,8 @@ import sys
 from auxiliary.colors import WHITE
 from auxiliary.enums import GameState, Key
 from map import Map
-from menu import Menu
+from Front_end.menu import Menu
+
 
 DEBUG_ALL = False
 DEBUG_KEY = True
