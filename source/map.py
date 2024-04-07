@@ -12,7 +12,7 @@ from player import Player
 FIELD_SIZE = 135
 OFFSET = 2
 ABS_PATH = os.path.dirname(os.path.dirname(__file__))
-
+NOT_ACCESIBLE_FIELDS = [FieldType.WATER, FieldType.MOUNTAIN]
 
 class Map:
     class Data:
@@ -84,16 +84,16 @@ class Map:
                         self._dat.map[new_row][new_col] = Field(field_type)
                         self._spread_terrain(new_row, new_col, field_type, spread_chance * 0.9, spread_steps - 1)
 
-    def generate_biomes_map(self, row_number: int = 25, column_number: int = 25):
+    def generate_biomes_map(self, row_number: int = 25, column_number: int = 25, biomese : int = 5):
 
         self._dat = self.Data()
         self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_number)] for _ in range(row_number)]
 
         for field_type in FieldType:
-            num_seeds = random.randint(1, 4)
+            num_seeds = random.randint(biomese - biomese * 0.2 ,  biomese + biomese * 0.2)
             for _ in range(num_seeds):
-                seed_row = random.randint(0, row_number - 1)
-                seed_col = random.randint(0, column_number - 1)
+                seed_row = random.randint(num_seeds, row_number - 1)
+                seed_col = random.randint(num_seeds, column_number - 1)
                 self._spread_terrain(seed_row, seed_col, field_type, row_number, column_number)
 
         while True:
@@ -103,7 +103,7 @@ class Map:
                 self._dat.player_pos = [row, col]
                 break
 
-    def generate_map(self, row_number: int = 100, column_number: int = 100) -> None:
+    def generate_random_map(self, row_number: int = 100, column_number: int = 100) -> None:
         self._dat = self.Data()
         self._dat.map = [[Field() for _ in range(column_number)] for _ in range(row_number)]
         self._dat.player = Player()
@@ -113,7 +113,8 @@ class Map:
 
     def move_player_if_possible(self, row, column):
         # todo: Pridat logiku aby Player nemohol ist do Water, Mountain
-        if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]):
+        
+        if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) and self._dat.map[row][column].field_type not in NOT_ACCESIBLE_FIELDS:
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
 
