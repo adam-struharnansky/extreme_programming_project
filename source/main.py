@@ -127,7 +127,10 @@ while True:
             break
 
     if state_of_game == GameState.LOADING_NEW_GAME:
-        game_map.generate_map()
+        # todo: Vlozit do menu vyber, aky typ mapy a aku velkost mapy chceme vygenerovat. A tu sa potom podla toho taka
+        # mapa vytvori.
+        # game_map.generate_map()
+        game_map.generate_biomes_map()
         game_map.draw()
         state_of_game = GameState.PLAYING_GAME
     if state_of_game == GameState.LOADING_EXISTING_GAME:

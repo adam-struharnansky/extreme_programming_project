@@ -3,7 +3,7 @@ import pickle
 import pygame
 import random
 
-from auxiliary.enums import Key
+from auxiliary.enums import Key, FieldType
 from auxiliary.colors import *
 from field import Field
 from player import Player
@@ -72,6 +72,37 @@ class Map:
         # todo: Pridat ich olozenie do self.dat (vyriesit ako, zmenit verziu .pickle suborov)
         pass
 
+    def _spread_terrain(self, start_row, start_col, field_type, row_number, column_number, spread_chance=0.5,
+                        spread_steps=3):
+        if spread_steps == 0:
+            return
+        for d_row in [-1, 0, 1]:
+            for d_col in [-1, 0, 1]:
+                new_row, new_col = start_row + d_row, start_col + d_col
+                if 0 <= new_row < row_number and 0 <= new_col < column_number:
+                    if random.random() < spread_chance:
+                        self._dat.map[new_row][new_col] = Field(field_type)
+                        self._spread_terrain(new_row, new_col, field_type, spread_chance * 0.9, spread_steps - 1)
+
+    def generate_biomes_map(self, row_number: int = 25, column_number: int = 25):
+
+        self._dat = self.Data()
+        self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_number)] for _ in range(row_number)]
+
+        for field_type in FieldType:
+            num_seeds = random.randint(1, 4)
+            for _ in range(num_seeds):
+                seed_row = random.randint(0, row_number - 1)
+                seed_col = random.randint(0, column_number - 1)
+                self._spread_terrain(seed_row, seed_col, field_type, row_number, column_number)
+
+        while True:
+            row, col = random.randint(0, row_number - 1), random.randint(0, column_number - 1)
+            if self._dat.map[row][col]._field_type != FieldType.WATER:
+                self._dat.player = Player()
+                self._dat.player_pos = [row, col]
+                break
+
     def generate_map(self, row_number: int = 100, column_number: int = 100) -> None:
         self._dat = self.Data()
         self._dat.map = [[Field() for _ in range(column_number)] for _ in range(row_number)]
@@ -81,7 +112,7 @@ class Map:
         self.generate_loot(row_number, column_number)
 
     def move_player_if_possible(self, row, column):
-        # todo: Pridat logiku aby Player nemohol ist do Water, Mountain (pripadne zatiahnut sem aj efekty?)
+        # todo: Pridat logiku aby Player nemohol ist do Water, Mountain
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]):
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
