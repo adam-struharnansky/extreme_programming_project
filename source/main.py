@@ -4,8 +4,7 @@ import sys
 from auxiliary.colors import WHITE
 from auxiliary.enums import GameState, Key
 from map import Map
-from Front_end.menu import Menu
-
+from front_end.menu import Menu
 
 DEBUG_ALL = False
 DEBUG_KEY = True
@@ -13,7 +12,7 @@ DEBUG_MOVE = True
 SIZE = WIDTH, HEIGHT = 700, 770
 MENU_HEIGHT = 50
 BACKGROUND_COLOR = WHITE
-MAP_PARAMS = {'biomese_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
+MAP_PARAMS = {'biome_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
 
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
@@ -124,7 +123,7 @@ while True:
                     if opt_button.is_checked:
                         MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
 
-                print(f"MAP params are: {MAP_PARAMS}")        
+                print(f"MAP params are: {MAP_PARAMS}")
                 break
         else:
             response = None
@@ -137,19 +136,18 @@ while True:
             break
 
     if state_of_game == GameState.LOADING_NEW_GAME:
-        # todo: Vlozit do menu vyber, aky typ mapy a aku velkost mapy chceme vygenerovat. A tu sa potom podla toho taka
-        # mapa vytvori.
-
-        if MAP_PARAMS['biomese_type'] == 'random':
-            game_map.generate_random_map(row_number=MAP_PARAMS["sizes"]['row_number'], column_number=MAP_PARAMS['sizes']['column_number'])
-        elif MAP_PARAMS['biomese_type'] == 'Biomes map':
-            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'], column_number=MAP_PARAMS['sizes']['column_number'], biomese=5)
+        if MAP_PARAMS['biome_type'] == 'random':
+            game_map.generate_random_map(row_number=MAP_PARAMS["sizes"]['row_number'],
+                                         column_number=MAP_PARAMS['sizes']['column_number'])
+        elif MAP_PARAMS['biome_type'] == 'Biomes map':
+            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'],
+                                         column_number=MAP_PARAMS['sizes']['column_number'], biomese=5)
         else:
-            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'], column_number=MAP_PARAMS['sizes']['column_number'], biomese=20)
+            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'],
+                                         column_number=MAP_PARAMS['sizes']['column_number'], biomese=20)
 
-        
         game_map.draw()
-            
+
         state_of_game = GameState.PLAYING_GAME
     if state_of_game == GameState.LOADING_EXISTING_GAME:
         game_map.load_map()
