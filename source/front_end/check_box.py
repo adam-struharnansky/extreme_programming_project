@@ -17,14 +17,20 @@ class CheckBox:
         self._box = pygame.Rect(x, y, width, height)
         self._option = option
 
+        self._mousedown = False
+
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not self._mousedown:
             if self._box.collidepoint(event.pos):
                 # Toggle the checkbox state if the box area is clicked
                 self._is_checked = not self._is_checked
+                self._mousedown = True
                 # Notify the group (if part of one) about the state change (so others can uncheck themselves)
                 if self.group:
                     self.group.handle_event(event, self)
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            self._mousedown = False
 
     def draw(self):
         # If checked, draw an "X", otherwise just draw the box
