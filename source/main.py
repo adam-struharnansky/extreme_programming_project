@@ -12,6 +12,7 @@ DEBUG_MOVE = True
 SIZE = WIDTH, HEIGHT = 700, 770
 MENU_HEIGHT = 50
 BACKGROUND_COLOR = WHITE
+# todo: Namiesto slovnych typov mapy vytvorit nejaky enum
 MAP_PARAMS = {'biome_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
 
 pygame.init()
@@ -37,7 +38,7 @@ def handle_keys():
     keys = pygame.key.get_pressed()
     screen.blit(menu_screen, (0, 0))
     screen.blit(map_screen, (0, MENU_HEIGHT))
-    # todo: Zmenit tieto magicke konstanty na nejaky enum
+    # todo: Zmenit tieto magicke konstanty (key_states = 0, 1, 2) na nejaky enum
 
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if key_states[pygame.K_RIGHT] < 1:
@@ -137,18 +138,17 @@ while True:
 
     if state_of_game == GameState.LOADING_NEW_GAME:
         if MAP_PARAMS['biome_type'] == 'random':
-            game_map.generate_random_map(row_number=MAP_PARAMS["sizes"]['row_number'],
-                                         column_number=MAP_PARAMS['sizes']['column_number'])
+            game_map.generate_random_map(row_count=MAP_PARAMS["sizes"]['row_number'],
+                                         column_count=MAP_PARAMS['sizes']['column_number'])
         elif MAP_PARAMS['biome_type'] == 'Biomes map':
-            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'],
-                                         column_number=MAP_PARAMS['sizes']['column_number'], biomese=5)
+            game_map.generate_biomes_map(row_count=MAP_PARAMS["sizes"]['row_number'],
+                                         column_count=MAP_PARAMS['sizes']['column_number'], biome_count=5)
         else:
-            game_map.generate_biomes_map(row_number=MAP_PARAMS["sizes"]['row_number'],
-                                         column_number=MAP_PARAMS['sizes']['column_number'], biomese=20)
-
+            game_map.generate_biomes_map(row_count=MAP_PARAMS["sizes"]['row_number'],
+                                         column_count=MAP_PARAMS['sizes']['column_number'], biome_count=20)
         game_map.draw()
-
         state_of_game = GameState.PLAYING_GAME
+
     if state_of_game == GameState.LOADING_EXISTING_GAME:
         game_map.load_map()
         game_map.draw()
@@ -166,7 +166,7 @@ while True:
                 break
         else:
             response = None
-
+        # todo: Namiesto komunikacie s response co je string pouzite na to nejaky enum
         if response == "Save Game" and not saving:
             if DEBUG_ALL:
                 print("Map saved")

@@ -43,4 +43,3 @@ class Effect:
     
     def get_change(self):
         return self._effect_level * (-1) if self._is_negative else self._effect_level
-

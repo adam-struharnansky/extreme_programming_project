@@ -8,11 +8,11 @@ from auxiliary.colors import *
 from field import Field
 from player import Player
 
-
 FIELD_SIZE = 135
 OFFSET = 2
 ABS_PATH = os.path.dirname(os.path.dirname(__file__))
 NOT_ACCESIBLE_FIELDS = [FieldType.WATER, FieldType.MOUNTAIN]
+
 
 class Map:
     class Data:
@@ -46,13 +46,13 @@ class Map:
         if file is None:
             map_number = len(os.listdir('../data'))
             file = f'data/map{map_number}.pickle'
-        with open(ABS_PATH+"//"+file, 'wb') as f:
+        with open(ABS_PATH + "//" + file, 'wb') as f:
             pickle.dump(self._dat, f)
 
     def load_map(self, file: str = None) -> None:
         if file is None:
             file = self._file
-        with open(ABS_PATH+"//"+file, 'rb') as f:
+        with open(ABS_PATH + "//" + file, 'rb') as f:
             self._dat = pickle.load(f)
 
         try:
@@ -61,60 +61,61 @@ class Map:
         except:
             raise Exception("Bad picle version")
 
-    def generate_enemies(self, row_number: int = 100, column_number: int = 100) -> None:
+    def generate_enemies(self, row_count: int = 100, column_count: int = 100) -> None:
         # todo: Pridat generovanie nepriatelov
         # todo: Pridat ich ulozenie do self._dat (vyriesit ako, zmenit verziu .pickle suborov)
         # todo: Porozmyslat, ako sa to ma generovat, ci chceme aby loot aj nepriatelia boli na tych istych miestach
         pass
 
-    def generate_loot(self, row_number: int = 100, column_number: int = 100) -> None:
+    def generate_loot(self, row_count: int = 100, column_count: int = 100) -> None:
         # todo: Pridat generovanie loot-u
         # todo: Pridat ich olozenie do self.dat (vyriesit ako, zmenit verziu .pickle suborov)
         pass
 
-    def _spread_terrain(self, start_row, start_col, field_type, row_number, column_number, spread_chance=0.5,
+    def _spread_terrain(self, start_row, start_col, field_type, row_count, column_count, spread_chance=0.5,
                         spread_steps=3):
         if spread_steps == 0:
             return
         for d_row in [-1, 0, 1]:
             for d_col in [-1, 0, 1]:
                 new_row, new_col = start_row + d_row, start_col + d_col
-                if 0 <= new_row < row_number and 0 <= new_col < column_number:
+                if 0 <= new_row < row_count and 0 <= new_col < column_count:
                     if random.random() < spread_chance:
                         self._dat.map[new_row][new_col] = Field(field_type)
                         self._spread_terrain(new_row, new_col, field_type, spread_chance * 0.9, spread_steps - 1)
 
-    def generate_biomes_map(self, row_number: int = 25, column_number: int = 25, biomese : int = 5):
-
-        self._dat = self.Data()
-        self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_number)] for _ in range(row_number)]
-
-        for field_type in FieldType:
-            num_seeds = random.randint(biomese - biomese * 0.2 ,  biomese + biomese * 0.2)
-            for _ in range(num_seeds):
-                seed_row = random.randint(num_seeds, row_number - 1)
-                seed_col = random.randint(num_seeds, column_number - 1)
-                self._spread_terrain(seed_row, seed_col, field_type, row_number, column_number)
-
+    def _place_player_randomly(self, row_count: int = 50, column_count: int = 50):
         while True:
-            row, col = random.randint(0, row_number - 1), random.randint(0, column_number - 1)
-            if self._dat.map[row][col]._field_type != FieldType.WATER:
+            row, col = random.randint(0, row_count - 1), random.randint(0, column_count - 1)
+            if self._dat.map[row][col].field_type != FieldType.WATER \
+                    and self._dat.map[row][col].field_type != FieldType.MOUNTAIN:
                 self._dat.player = Player()
                 self._dat.player_pos = [row, col]
                 break
 
-    def generate_random_map(self, row_number: int = 100, column_number: int = 100) -> None:
+    def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_count: int = 5):
+
         self._dat = self.Data()
-        self._dat.map = [[Field() for _ in range(column_number)] for _ in range(row_number)]
-        self._dat.player = Player()
-        self._dat.player_pos = [random.randint(0, row_number - 1), random.randint(0, column_number - 1)]
-        self.generate_enemies(row_number, column_number)
-        self.generate_loot(row_number, column_number)
+        self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_count)] for _ in range(row_count)]
+
+        for field_type in FieldType:
+            num_seeds = random.randint(int(biome_count - biome_count * 0.2), int(biome_count + biome_count * 0.2))
+            for _ in range(num_seeds):
+                seed_row = random.randint(num_seeds, row_count - 1)
+                seed_col = random.randint(num_seeds, column_count - 1)
+                self._spread_terrain(seed_row, seed_col, field_type, row_count, column_count)
+        self._place_player_randomly()
+
+    def generate_random_map(self, row_count: int = 100, column_count: int = 100) -> None:
+        self._dat = self.Data()
+        self._dat.map = [[Field() for _ in range(column_count)] for _ in range(row_count)]
+        self._place_player_randomly()
+        self.generate_enemies(row_count, column_count)
+        self.generate_loot(row_count, column_count)
 
     def move_player_if_possible(self, row, column):
-        # todo: Pridat logiku aby Player nemohol ist do Water, Mountain
-        
-        if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) and self._dat.map[row][column].field_type not in NOT_ACCESIBLE_FIELDS:
+        if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
+                and self._dat.map[row][column].field_type not in NOT_ACCESIBLE_FIELDS:
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
 
@@ -133,12 +134,12 @@ class Map:
 
     def draw(self):
         self._screen.fill(self._background_color)
-        self.draw_map()
-        self.draw_enemies()
-        self.draw_player()
-        self.draw_statistics()
+        self._draw_map()
+        self._draw_enemies()
+        self._draw_player()
+        self._draw_statistics()
 
-    def draw_statistics(self):
+    def _draw_statistics(self):
         text = ""
         text += "Att: " + str(self._dat.player.get_real_attack())
         text += " | Def: " + str(self._dat.player.get_real_defence())
@@ -153,18 +154,18 @@ class Map:
         self._stat_tab.fill(BLACK)
         self._stat_tab.blit(text_surface, (10, 5))
 
-    def draw_player(self):
+    def _draw_player(self):
         x = 2 * (FIELD_SIZE + 5)
         y = 2 * (FIELD_SIZE + 5)
         # drawing base player
-        image = pygame.image.load(ABS_PATH+"//"+self._dat.player.picture_path)
+        image = pygame.image.load(ABS_PATH + "//" + self._dat.player.picture_path)
         self._screen.blit(image, (x, y))
         # drawing armory on top of the base player
         for armor in self._dat.player.get_equipment():
             if armor:
-                self._screen.blit(pygame.image.load(ABS_PATH+"//"+armor.picture_path), (x, y))
+                self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
 
-    def draw_enemies(self):
+    def _draw_enemies(self):
         for row_number, row in enumerate(self._dat.map):
             for column_number, field in enumerate(row):
                 if field.enemy_present:
@@ -173,7 +174,7 @@ class Map:
                     # todo: Vykreslit nepriatela
                     # todo: Vykreslit aj vsetku zbroj nepriatela (ak im ju chceme pridat)
 
-    def draw_map(self):
+    def _draw_map(self):
         for row_difference in range(-OFFSET, OFFSET + 1):
             for column_difference in range(-OFFSET, OFFSET + 1):
                 row = self._dat.player_pos[0] + row_difference
@@ -182,5 +183,5 @@ class Map:
                     x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
                     y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
                     field = self._dat.map[row][column]
-                    image = pygame.image.load(ABS_PATH+"//"+field.picture_path)
+                    image = pygame.image.load(ABS_PATH + "//" + field.picture_path)
                     self._screen.blit(image, (x, y))
