@@ -2,6 +2,7 @@ import os.path
 import random
 
 from auxiliary.enums import FieldType
+from enemy import Enemy
 
 
 class Field:
@@ -14,16 +15,15 @@ class Field:
         :param properties: Not implemented yet
         """
         if field_type is not None and field_type not in FieldType:
-            raise ModuleNotFoundError(f'field type "{field_type}" not found \n Possible types are:{list(FieldType)}')
+            raise ModuleNotFoundError(f'field type "{field_type}" not found \n Possible types are: {list(FieldType)}')
 
         self._field_type = field_type if field_type else random.choice(list(FieldType))
         self._properties = properties if properties else {}
-        self._active_objects = []
-        
-        if active_objects is not None:
-            self._active_objects.extend(active_objects)
-        self._enemy_present = False
+        self._active_objects = active_objects if active_objects else []
+
+        self._enemy = None
         self._picture_path = os.path.join('graphics', 'error', 'empty.png')
+
         match self._field_type:
             case FieldType.WATER:
                 self._picture_path = os.path.join('graphics', 'map_tiles', 'water.png')
@@ -45,7 +45,7 @@ class Field:
             return False
         if self._active_objects != other.active_objects:
             return False
-        if self._enemy_present != other.enemy_present:
+        if self._enemy != other.enemy:
             return False
         return True
 
@@ -62,12 +62,12 @@ class Field:
         return self._active_objects
 
     @property
-    def enemy_present(self) -> bool:
-        return self._enemy_present
+    def enemy(self) -> Enemy:
+        return self._enemy
 
-    @enemy_present.setter
-    def enemy_present(self, present: bool) -> None:
-        self._enemy_present = present
+    @enemy.setter
+    def enemy(self, enemy: Enemy) -> None:
+        self._enemy = enemy
 
     def add_active_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
         self._active_objects.append(active_object)

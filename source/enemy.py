@@ -40,3 +40,7 @@ class Enemy(Creature):
         Overriding Creature function
         """
         return os.path.join('graphics', 'creatures', 'base_enemy.png')
+
+    def generate_random_properties(self):
+        pass
+        # todo: Nahodne vygenerovať nepriatela

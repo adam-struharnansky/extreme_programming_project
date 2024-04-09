@@ -7,6 +7,7 @@ from auxiliary.enums import Key, FieldType
 from auxiliary.colors import *
 from field import Field
 from player import Player
+from enemy import Enemy
 
 FIELD_SIZE = 135
 OFFSET = 2
@@ -19,8 +20,6 @@ class Map:
         def __init__(self):
             self.map = None
             self.version = 1
-            # todo: Odstranit field_size a namiesto toto pouzivat FIELD_SIZE. Treba pritom zmenit verziu pickle suborov!
-            self.field_size = 135
             self.player_pos = [0, 0]  # row column
             self.player = Player()
 
@@ -61,16 +60,20 @@ class Map:
         except AttributeError:
             raise Exception("Bad pickle version")
 
-    def generate_enemies(self, row_count: int = 100, column_count: int = 100) -> None:
-        # todo: Pridat generovanie nepriatelov
-        # todo: Pridat ich ulozenie do self._dat (vyriesit ako, zmenit verziu .pickle suborov)
-        # todo: Porozmyslat, ako sa to ma generovat, ci chceme aby loot aj nepriatelia boli na tych istych miestach
-        pass
+    def generate_enemies(self, spawn_chance=0.05) -> None:
+        for row in self._dat.map:
+            for field in row:
+                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
+                    field.enemy = Enemy()
+                    field.enemy.generate_random_properties()
 
-    def generate_loot(self, row_count: int = 100, column_count: int = 100) -> None:
-        # todo: Pridat generovanie loot-u
-        # todo: Pridat ich olozenie do self.dat (vyriesit ako, zmenit verziu .pickle suborov)
-        pass
+    def generate_loot(self, spawn_chance=0.05) -> None:
+        for row in self._dat.map:
+            for field in row:
+                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
+                    if field.enemy is None:  # loot a enemy nemôžu byť na tom istom mieste
+                        # field.add_active_object()  # todo: Pridat generovanie loot-u
+                        pass
 
     def _spread_terrain(self, start_row, start_col, field_type, row_count, column_count, spread_chance=0.5,
                         spread_steps=3):
@@ -94,7 +97,6 @@ class Map:
                 break
 
     def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_count: int = 5):
-
         self._dat = self.Data()
         self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_count)] for _ in range(row_count)]
 
@@ -104,14 +106,17 @@ class Map:
                 seed_row = random.randint(num_seeds, row_count - 1)
                 seed_col = random.randint(num_seeds, column_count - 1)
                 self._spread_terrain(seed_row, seed_col, field_type, row_count, column_count)
+
         self._place_player_randomly()
+        self.generate_enemies()
+        self.generate_loot()
 
     def generate_random_map(self, row_count: int = 100, column_count: int = 100) -> None:
         self._dat = self.Data()
         self._dat.map = [[Field() for _ in range(column_count)] for _ in range(row_count)]
         self._place_player_randomly()
-        self.generate_enemies(row_count, column_count)
-        self.generate_loot(row_count, column_count)
+        self.generate_enemies()
+        self.generate_loot()
 
     def move_player_if_possible(self, row, column):
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
@@ -166,13 +171,20 @@ class Map:
                 self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
 
     def _draw_enemies(self):
-        for row_number, row in enumerate(self._dat.map):
-            for column_number, field in enumerate(row):
-                if field.enemy_present:
-                    y = (FIELD_SIZE + 5) * row_number
-                    x = (FIELD_SIZE + 5) * column_number
-                    # todo: Vykreslit nepriatela
-                    # todo: Vykreslit aj vsetku zbroj nepriatela (ak im ju chceme pridat)
+        for row_difference in range(-OFFSET, OFFSET + 1):
+            for column_difference in range(-OFFSET, OFFSET + 1):
+                row = self._dat.player_pos[0] + row_difference
+                column = self._dat.player_pos[1] + column_difference
+                if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map):
+                    x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
+                    y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
+                    field = self._dat.map[row][column]
+                    if field.enemy:
+                        image = pygame.image.load(ABS_PATH + "//" + field.enemy.picture_path())
+                        self._screen.blit(image, (x, y))
+                        for armor in field.enemy.get_equipment():
+                            if armor:
+                                self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
 
     def _draw_map(self):
         for row_difference in range(-OFFSET, OFFSET + 1):

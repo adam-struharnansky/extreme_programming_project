@@ -24,7 +24,3 @@ def test_field_eq():
     field_1._active_objects = []
 
     assert field_1 == field_2
-
-    field_1._enemy_present = True
-    assert field_1 != field_2
-    field_1._enemy_present = False

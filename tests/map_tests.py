@@ -9,7 +9,6 @@ def test_item_duplicity():
     new_mp.load_map("data/test.pickle")
 
     assert mp._dat.game_map == new_mp._dat.game_map
-    assert mp._dat.field_size == new_mp._dat.field_size
     assert mp._dat.player_pos == new_mp._dat.player_pos
     assert mp._dat.player == new_mp._dat.player
 
