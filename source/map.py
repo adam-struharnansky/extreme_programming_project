@@ -11,7 +11,7 @@ from player import Player
 FIELD_SIZE = 135
 OFFSET = 2
 ABS_PATH = os.path.dirname(os.path.dirname(__file__))
-NOT_ACCESIBLE_FIELDS = [FieldType.WATER, FieldType.MOUNTAIN]
+NOT_ACCESSIBLE_FIELDS = [FieldType.WATER, FieldType.MOUNTAIN]
 
 
 class Map:
@@ -56,10 +56,10 @@ class Map:
             self._dat = pickle.load(f)
 
         try:
-            if self._dat.version != Data().version:
-                raise Exception("Bad picle version")
-        except:
-            raise Exception("Bad picle version")
+            if self._dat.version != self.Data().version:
+                raise Exception("Bad pickle version")
+        except AttributeError:
+            raise Exception("Bad pickle version")
 
     def generate_enemies(self, row_count: int = 100, column_count: int = 100) -> None:
         # todo: Pridat generovanie nepriatelov
@@ -115,7 +115,7 @@ class Map:
 
     def move_player_if_possible(self, row, column):
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
-                and self._dat.map[row][column].field_type not in NOT_ACCESIBLE_FIELDS:
+                and self._dat.map[row][column].field_type not in NOT_ACCESSIBLE_FIELDS:
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
 
