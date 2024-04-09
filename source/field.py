@@ -3,6 +3,7 @@ import random
 
 from auxiliary.enums import FieldType
 from enemy import Enemy
+from item import Item
 
 
 class Field:
@@ -58,7 +59,7 @@ class Field:
         return self._properties
 
     @property
-    def active_objects(self) -> list:
+    def active_objects(self) -> list[Item]:
         return self._active_objects
 
     @property

@@ -140,7 +140,6 @@ class Map:
     def draw(self):
         self._screen.fill(self._background_color)
         self._draw_map()
-        self._draw_enemies()
         self._draw_player()
         self._draw_statistics()
 
@@ -170,30 +169,26 @@ class Map:
             if armor:
                 self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
 
-    def _draw_enemies(self):
-        for row_difference in range(-OFFSET, OFFSET + 1):
-            for column_difference in range(-OFFSET, OFFSET + 1):
-                row = self._dat.player_pos[0] + row_difference
-                column = self._dat.player_pos[1] + column_difference
-                if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map):
-                    x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
-                    y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
-                    field = self._dat.map[row][column]
-                    if field.enemy:
-                        image = pygame.image.load(ABS_PATH + "//" + field.enemy.picture_path())
-                        self._screen.blit(image, (x, y))
-                        for armor in field.enemy.get_equipment():
-                            if armor:
-                                self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
-
     def _draw_map(self):
         for row_difference in range(-OFFSET, OFFSET + 1):
             for column_difference in range(-OFFSET, OFFSET + 1):
                 row = self._dat.player_pos[0] + row_difference
                 column = self._dat.player_pos[1] + column_difference
+
                 if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map):
                     x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
                     y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
                     field = self._dat.map[row][column]
-                    image = pygame.image.load(ABS_PATH + "//" + field.picture_path)
-                    self._screen.blit(image, (x, y))
+
+                    field_image = pygame.image.load(ABS_PATH + "//" + field.picture_path)
+                    self._screen.blit(field_image, (x, y))
+
+                    if field.enemy:
+                        enemy_image = pygame.image.load(ABS_PATH + "//" + field.enemy.picture_path())
+                        self._screen.blit(enemy_image, (x, y))
+                        for armor in field.enemy.get_equipment():
+                            if armor:
+                                self._screen.blit(pygame.image.load(ABS_PATH + "//" + armor.picture_path), (x, y))
+
+                    for active_object in field.active_objects:
+                        pass  # todo: Vykresliť itemy
