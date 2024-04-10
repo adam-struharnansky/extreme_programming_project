@@ -44,4 +44,4 @@ class Enemy(Creature):
 
     def generate_random_properties(self):
         pass
-        # todo: Nahodne vygenerovať nepriatela
+        # todo: Generate random enemy

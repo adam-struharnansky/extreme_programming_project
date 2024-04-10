@@ -70,10 +70,10 @@ class Field:
     def enemy(self, enemy: Enemy) -> None:
         self._enemy = enemy
 
-    def add_active_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
+    def add_active_object(self, active_object) -> None:  # todo: Add annotation, what is an active_object?
         self._active_objects.append(active_object)
 
-    def remove_object(self, active_object) -> None:  # todo: Pridat anotaciu, co je to active_object?
+    def remove_object(self, active_object) -> None:  # todo: Add annotation, what is an active_object?
         if active_object in self._active_objects:
             self._active_objects.remove(active_object)
 

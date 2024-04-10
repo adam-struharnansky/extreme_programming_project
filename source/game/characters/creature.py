@@ -6,11 +6,8 @@ from source.game.items.armor import Armor
 from source.game.items.effect import Effect
 from source.game.items.item import Item
 
-# todo: Pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
-
 
 class Creature:
-
     class _Equipment:
         def __init__(self):
             self._head_armor = None
@@ -73,7 +70,7 @@ class Creature:
         self._defence = defence
         self._evasion = evasion
         self._speed = speed
-        self._max_inventory = 20  # todo: Nech sa to meni podla levelu
+        self._max_inventory = 20  # todo: This should change depending on the level
         self._picture_path = os.path.join('error', 'empty.png')
 
     @property
@@ -115,7 +112,7 @@ class Creature:
         for armor in self._equipment.get_equipment():
             if armor:
                 real_attack += armor.additional_attack
-        # todo: Pridat zmenu aj z efektov
+        # todo: Add change also from the effects
         return real_attack
 
     @property
@@ -136,7 +133,7 @@ class Creature:
         for armor in self._equipment.get_equipment():
             if armor:
                 real_defence += armor.additional_defence
-        # todo: Pridat zmenu aj z efektov
+        # todo: Add change also from the effects
         return real_defence
 
     @property
@@ -166,7 +163,7 @@ class Creature:
     @speed.setter
     def speed(self, new_speed: int) -> None:
         self._speed = new_speed
-    
+
     def get_real_speed(self) -> int:
         """
         Computation of real speed - the combination of base speed with each item in equipment and each active
@@ -215,9 +212,9 @@ class Creature:
         return self._effects
 
     def add_effect(self, effect: Effect) -> None:
-        # ak existuje taky isty effect aktualizuje jeho duration
+        # if there is the same type of effect only the duration is changed (not adding new one)
         if effect in self._effects:
-            self._effects[self._effects.index(effect)].effect_duration=effect.effect_duration
+            self._effects[self._effects.index(effect)].effect_duration = effect.effect_duration
         elif effect:
             self._effects.append(effect)
 
@@ -234,8 +231,8 @@ class Creature:
             self._effects.remove(effect)
 
     def use_random_potion(self):
-        if(self._inventory):
-            rnd = random.randint(0, len(self._inventory)-1)
+        if self._inventory:
+            rnd = random.randint(0, len(self._inventory) - 1)
             self.add_effect(self._inventory[rnd].use_potion())
             self._inventory.remove(self._inventory[rnd])
 

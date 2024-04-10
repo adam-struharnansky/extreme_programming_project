@@ -85,7 +85,7 @@ class Player(Creature):
         return self._next_level_experience
 
     def get_next_next_level_experience(self) -> int:
-        return int(self._next_level_experience * 1.5)  # todo: vybalansovat tuto konstantu
+        return int(self._next_level_experience * 1.5)  # todo: Balance this constant (or change this function entirely)
 
     @property
     def picture_path(self) -> str:

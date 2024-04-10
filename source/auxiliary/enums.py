@@ -1,11 +1,7 @@
 from enum import auto, Enum
 
-
-class Key(Enum):
-    UP = 1073741906
-    DOWN = 1073741905
-    LEFT = 1073741904
-    RIGHT = 1073741903
+# try to keep enums in this file alphabetical
+# try to use auto(), if the values of enums are not important
 
 
 class ArmorType(Enum):
@@ -17,13 +13,6 @@ class ArmorType(Enum):
     FEET = auto()
 
 
-class ItemLevel(Enum):
-    BRONZE = 0
-    SILVER = 1
-    GOLD = 2
-    LEGENDARY = 3
-
-
 class EffectType(Enum):
     HEALTH = "health"
     SPEED = "speed"
@@ -31,18 +20,34 @@ class EffectType(Enum):
     IMMORTALITY = "immortality"
 
 
-class PotionType(Enum):
-    HEAL = "heal"
-    HASTE = "haste"
-    POISON = "poison"
-    SLOW = "slow"
-    EVASION = "evasion"
+class FieldType(Enum):
+    MOUNTAIN = auto()
+    PLAINS = auto()
+    FOREST = auto()
+    DESERT = auto()
+    WATER = auto()
 
 
-class PotionSize(Enum):
-    SMALL = 3
-    MEDIUM = 5
-    BIG = 7
+class GameState(Enum):
+    MENU = auto()
+    LOADING_NEW_GAME = auto()
+    LOADING_EXISTING_GAME = auto()
+    PLAYING_GAME = auto()
+    LOST_GAME = auto()
+
+
+class ItemLevel(Enum):
+    BRONZE = auto()
+    SILVER = auto()
+    GOLD = auto()
+    LEGENDARY = auto()
+
+
+class Key(Enum):
+    UP = 1073741906
+    DOWN = 1073741905
+    LEFT = 1073741904
+    RIGHT = 1073741903
 
 
 class PotionLevel(Enum):
@@ -51,17 +56,15 @@ class PotionLevel(Enum):
     LEGENDARY = 3
 
 
-class FieldType(Enum):
-    MOUNTAIN = 'mountain'
-    PLAINS = 'plains'
-    FOREST = 'forest'
-    DESERT = 'desert'
-    WATER = 'water'
+class PotionSize(Enum):
+    SMALL = 3
+    MEDIUM = 5
+    BIG = 7
 
 
-class GameState(Enum):
-    MENU = 0
-    LOADING_NEW_GAME = 1
-    LOADING_EXISTING_GAME = 2
-    PLAYING_GAME = 3
-    LOST_GAME = 4
+class PotionType(Enum):
+    HEAL = "heal"
+    HASTE = "haste"
+    POISON = "poison"
+    SLOW = "slow"
+    EVASION = "evasion"

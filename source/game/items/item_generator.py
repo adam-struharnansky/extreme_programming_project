@@ -9,9 +9,9 @@ from source.game.items.item import Item
 from source.game.items.potion import Potion
 
 
-def generate_random_item(item_level: ItemLevel = None) -> Item:
+def generate_random_item(item_level: ItemLevel = None, potion_level: PotionLevel = None) -> Item:
     item_level = item_level if item_level else ItemLevel.BRONZE
-    potion_level = potion_level if potion_level else PotionLevel.USUAL  # fixme: Nema byt teda toto ako parameter?
+    potion_level = potion_level if potion_level else PotionLevel.USUAL
 
     item_types_number = [1, 2]
     generated_item_type = random.choice(item_types_number)
@@ -24,7 +24,6 @@ def generate_random_item(item_level: ItemLevel = None) -> Item:
 
 
 def generate_random_armor(item_level: ItemLevel = None) -> Armor:
-    #  todo: Vytvorit vsetky itemy ako pickle files, a potom iba z toho nahodne vyberat
     item_level = item_level if item_level else ItemLevel.BRONZE
     armor_type = random.choices(list(ArmorType))
 
@@ -80,5 +79,5 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
 
 
 def generate_random_potion(potion_level: PotionLevel = None) -> Potion:
-    # todo: Vygenerovat nahodny potion
+    # todo: Generate random potion
     return Potion(None, None, potion_level)

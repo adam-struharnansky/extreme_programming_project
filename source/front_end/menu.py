@@ -16,8 +16,8 @@ class Menu:
         self._in_game_buttons = []
         self._lost_game_buttons = []
         self._menu_buttons = []
-        self._width_of_screen = info.current_w  # todo: Potrebujeme si toto ukladat?
-        self._height_of_screen = info.current_h  # todo: Potrebujeme si toto ukladat?
+        self._width_of_screen = info.current_w  # todo: Do we need to store this?
+        self._height_of_screen = info.current_h  # todo: Do we need to store this?
         self._map_sizes_group = CheckboxGroup()
         self._map_biomes_group = CheckboxGroup()
 
@@ -70,8 +70,8 @@ class Menu:
             map_type_check_box = CheckBox(320, 50 + offset_y, 50, 50, option, self._screen,
                                           option={'label': 'biome_type', 'value': option})
 
-            self._menu_buttons.append(map_size_check_box)  # todo: Toto su button-y alebo checkbox-y?
-            self._menu_buttons.append(map_type_check_box)  # todo: Toto su button-y alebo checkbox-y?
+            self._menu_buttons.append(map_size_check_box)  # todo: These are buttons or checkboxes?
+            self._menu_buttons.append(map_type_check_box)  # todo: These are buttons or checkboxes?
 
             self._map_sizes_group.add(map_size_check_box)
             self._map_biomes_group.add(map_type_check_box)
@@ -98,7 +98,7 @@ class Menu:
 
         for checkbox in self._menu_buttons:
             checkbox.handle_event(event)
-            clock = pygame.time.Clock()  # todo: Naco sa tu vytvara ta premenna clock? Nestaci iba zavolat pravu cast?
+            pygame.time.Clock()
 
     @property
     def lost_game_buttons(self):

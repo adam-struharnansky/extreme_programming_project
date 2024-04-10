@@ -73,8 +73,8 @@ class Map:
         for row in self._dat.map:
             for field in row:
                 if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
-                    if field.enemy is None:  # loot a enemy nemôžu byť na tom istom mieste
-                        # field.add_active_object()  # todo: Pridat generovanie loot-u
+                    if field.enemy is None:  # loot and enemy can not be at the same place
+                        # field.add_active_object()  # todo: Add loot generation
                         pass
 
     def _spread_terrain(self, start_row, start_col, field_type, row_count, column_count, spread_chance=0.5,
@@ -190,7 +190,8 @@ class Map:
                         self._screen.blit(enemy_image, (x, y))
                         for armor in field.enemy.get_equipment():
                             if armor:
-                                self._screen.blit(pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, armor.picture_path)), (x, y))
+                                self._screen.blit(
+                                    pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, armor.picture_path)), (x, y))
 
                     for active_object in field.active_objects:
-                        pass  # todo: Vykresliť itemy
+                        pass  # todo: Draw objects

@@ -9,28 +9,28 @@ class CheckBox:
         self._y = y
         self._width = width  # Width of the clickable area, not the text
         self._height = height
-        self._text = text  # todo: Potrebujeme si toto ukladat?
+        self._text = text  # todo: Do we need to store this?
         self._screen = screen
         self._is_checked = is_checked
-        self._font = font if font else pygame.font.Font(None, 32)  # todo: Potrebujme si toto ukladat?
+        self._font = font if font else pygame.font.Font(None, 32)  # todo: Do we need to store this?
         self._text_surface = self._font.render(text, True, (0, 0, 0))
         self._box = pygame.Rect(x, y, width, height)
         self._option = option
-
-        self._mousedown = False
+        self._checkbox_group = None
+        self._mouse_down = False
 
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and not self._mousedown:
+        if event.type == pygame.MOUSEBUTTONDOWN and not self._mouse_down:
             if self._box.collidepoint(event.pos):
                 # Toggle the checkbox state if the box area is clicked
                 self._is_checked = not self._is_checked
-                self._mousedown = True
+                self._mouse_down = True
                 # Notify the group (if part of one) about the state change (so others can uncheck themselves)
-                if self.group:
-                    self.group.handle_event(event, self)
+                if self._checkbox_group:
+                    self._checkbox_group.handle_event(self)
 
         if event.type == pygame.MOUSEBUTTONUP:
-            self._mousedown = False
+            self._mouse_down = False
 
     def draw(self):
         # If checked, draw an "X", otherwise just draw the box
@@ -62,3 +62,11 @@ class CheckBox:
     @property
     def option(self):
         return self._option
+
+    @property
+    def checkbox_group(self):
+        return self._checkbox_group
+
+    @checkbox_group.setter
+    def checkbox_group(self, value):
+        self._checkbox_group = value
