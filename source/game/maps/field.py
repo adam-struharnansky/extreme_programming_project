@@ -2,8 +2,8 @@ import os.path
 import random
 
 from auxiliary.enums import FieldType
-from enemy import Enemy
-from item import Item
+from source.game.characters.enemy import Enemy
+from source.game.items.item import Item
 
 
 class Field:
@@ -27,15 +27,15 @@ class Field:
 
         match self._field_type:
             case FieldType.WATER:
-                self._picture_path = os.path.join('graphics', 'map_tiles', 'water.png')
+                self._picture_path = os.path.join('map_tiles', 'water.png')
             case FieldType.FOREST:
-                self._picture_path = os.path.join('graphics', 'map_tiles', 'forest.png')
+                self._picture_path = os.path.join('map_tiles', 'forest.png')
             case FieldType.MOUNTAIN:
-                self._picture_path = os.path.join('graphics', 'map_tiles', 'mountain.png')
+                self._picture_path = os.path.join('map_tiles', 'mountain.png')
             case FieldType.PLAINS:
-                self._picture_path = os.path.join('graphics', 'map_tiles', 'plains.png')
+                self._picture_path = os.path.join('map_tiles', 'plains.png')
             case FieldType.DESERT:
-                self._picture_path = os.path.join('graphics', 'map_tiles', 'desert.png')
+                self._picture_path = os.path.join('map_tiles', 'desert.png')
 
     def __eq__(self, other) -> bool:
         if other is None or not isinstance(other, Field):

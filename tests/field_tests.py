@@ -1,4 +1,4 @@
-from source.field import *
+from source.game.maps.field import *
 
 
 def test_field_eq():

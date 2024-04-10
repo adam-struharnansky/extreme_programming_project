@@ -3,7 +3,8 @@ import os
 import random
 
 from auxiliary.enums import ArmorType, ItemLevel
-from item import Item
+from source.game.items.item import Item
+from auxiliary.constants import GRAPHIC_DIRECTORY
 
 
 class Armor(Item):
@@ -15,7 +16,7 @@ class Armor(Item):
         self._armor_level = armor_level if armor_level else random.choice(list(ItemLevel))
         self._additional_attack = additional_attack
         self._additional_defence = additional_defence
-        self._picture_path = picture_path if picture_path else os.path.join('graphics', 'empty.png')
+        self._picture_path = picture_path if picture_path else os.path.join('error', 'empty.png')
 
     @property
     def armor_type(self) -> ArmorType:

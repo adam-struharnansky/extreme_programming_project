@@ -1,7 +1,7 @@
 import pygame
 
 from auxiliary.colors import BLACK  # skotrolujte tento import, na mojom pocitaci toto funguje
-from buttons import Button
+from front_end.buttons import Button
 from .check_box import CheckBox
 from .checkbox_group import CheckboxGroup
 

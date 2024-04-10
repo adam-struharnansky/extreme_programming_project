@@ -1,6 +1,7 @@
 import os.path
 
-from creature import Creature
+from source.game.characters.creature import Creature
+from auxiliary.constants import GRAPHIC_DIRECTORY
 
 
 class Player(Creature):
@@ -25,7 +26,7 @@ class Player(Creature):
         self._level = level
         self._current_experience = current_experience
         self._next_level_experience = next_level_experience
-        self._picture_path = os.path.join('graphics', 'creatures', 'base_player.png')
+        self._picture_path = os.path.join('creatures', 'base_player.png')
 
     def __eq__(self, other) -> bool:
         if other is None or not isinstance(other, Player):
@@ -85,7 +86,7 @@ class Player(Creature):
         return self._next_level_experience
 
     def get_next_next_level_experience(self) -> int:
-        return int(self._next_level_experience * 1.5)  # todo - vybalansovat tuto konstantu
+        return int(self._next_level_experience * 1.5)  # todo: vybalansovat tuto konstantu
 
     @property
     def picture_path(self) -> str:

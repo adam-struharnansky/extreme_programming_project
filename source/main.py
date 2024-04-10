@@ -1,10 +1,12 @@
-import pygame
 import sys
+
+import pygame
 
 from auxiliary.colors import WHITE
 from auxiliary.enums import GameState, Key
-from map import Map
 from front_end.menu import Menu
+from source.game.maps.map import Map
+
 
 DEBUG_ALL = False
 DEBUG_KEY = True
@@ -83,7 +85,7 @@ def handle_keys():
                 # ----------------------------------------------------------------------------------------------
                 # docasne, iba pre testovanie, ci funguje pridavanie equipmentu
                 # todo: Presunut toto do do map.py, kde to bude spustene ked hrac pride na policko s loot-om
-                import item_generator
+                from source.game.items import item_generator
                 import random
                 from auxiliary.enums import ItemLevel
                 tmp_rnd = random.random()

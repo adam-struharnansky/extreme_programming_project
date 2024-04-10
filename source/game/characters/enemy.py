@@ -1,6 +1,7 @@
 import os
 
-from creature import Creature
+from source.game.characters.creature import Creature
+from auxiliary.constants import GRAPHIC_DIRECTORY
 
 
 class Enemy(Creature):
@@ -39,7 +40,8 @@ class Enemy(Creature):
         """
         Overriding Creature function
         """
-        return os.path.join('graphics', 'creatures', 'base_enemy.png')
+
+        return os.path.join('creatures', 'base_enemy.png')
 
     def generate_random_properties(self):
         pass

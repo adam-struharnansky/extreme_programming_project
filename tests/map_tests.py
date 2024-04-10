@@ -1,4 +1,4 @@
-from source.map import *
+from source.game.maps.map import *
 
 
 def test_item_duplicity():
