@@ -1,4 +1,4 @@
-from auxiliary.enums import EffectType
+from source.auxiliary.enums import EffectType
 
 
 class Effect:

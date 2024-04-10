@@ -1,14 +1,15 @@
 import os
 import pickle
-import pygame
 import random
 
-from auxiliary.enums import Key, FieldType
-from auxiliary.colors import *
-from source.game.maps.field import Field
-from game.characters.player import Player
+import pygame
+
+from source.auxiliary.colors import *
+from source.auxiliary.constants import GRAPHIC_DIRECTORY, DATA_DIRECTORY
+from source.auxiliary.enums import Key, FieldType
 from source.game.characters.enemy import Enemy
-from auxiliary.constants import GRAPHIC_DIRECTORY, DATA_DIRECTORY
+from source.game.characters.player import Player
+from source.game.maps.field import Field
 
 FIELD_SIZE = 135
 OFFSET = 2

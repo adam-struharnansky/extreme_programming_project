@@ -2,9 +2,8 @@
 import os
 import random
 
-from auxiliary.enums import ArmorType, ItemLevel
+from source.auxiliary.enums import ArmorType, ItemLevel
 from source.game.items.item import Item
-from auxiliary.constants import GRAPHIC_DIRECTORY
 
 
 class Armor(Item):

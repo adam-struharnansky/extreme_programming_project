@@ -1,7 +1,7 @@
 import os.path
 import random
 
-from auxiliary.enums import FieldType
+from source.auxiliary.enums import FieldType
 from source.game.characters.enemy import Enemy
 from source.game.items.item import Item
 

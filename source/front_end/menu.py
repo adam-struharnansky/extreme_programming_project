@@ -1,9 +1,9 @@
 import pygame
 
-from auxiliary.colors import BLACK  # skotrolujte tento import, na mojom pocitaci toto funguje
-from front_end.buttons import Button
-from .check_box import CheckBox
-from .checkbox_group import CheckboxGroup
+from source.auxiliary.colors import BLACK
+from source.front_end.buttons import Button
+from source.front_end.check_box import CheckBox
+from source.front_end.checkbox_group import CheckboxGroup
 
 
 class Menu:

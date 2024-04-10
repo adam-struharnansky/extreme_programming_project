@@ -1,11 +1,11 @@
 import os.path
 import random
 
+from source.auxiliary.enums import ArmorType, EffectType
 from source.game.items.armor import Armor
-from game.items.effect import Effect
-from auxiliary.enums import ArmorType, EffectType
+from source.game.items.effect import Effect
 from source.game.items.item import Item
-from auxiliary.constants import GRAPHIC_DIRECTORY
+
 # todo: Pridat kontrolu do kazdej set funkcie, ci je to spravneho typu
 
 

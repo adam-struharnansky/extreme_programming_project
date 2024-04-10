@@ -7,7 +7,6 @@ from auxiliary.enums import GameState, Key
 from front_end.menu import Menu
 from source.game.maps.map import Map
 
-
 DEBUG_ALL = False
 DEBUG_KEY = True
 DEBUG_MOVE = True

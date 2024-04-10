@@ -1,7 +1,6 @@
 import os
 
 from source.game.characters.creature import Creature
-from auxiliary.constants import GRAPHIC_DIRECTORY
 
 
 class Enemy(Creature):

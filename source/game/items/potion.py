@@ -1,6 +1,7 @@
 import random
+
+from source.auxiliary.enums import EffectType, PotionLevel, PotionSize, PotionType
 from source.game.items.effect import Effect
-from auxiliary.enums import EffectType, PotionLevel, PotionSize, PotionType
 from source.game.items.item import Item
 
 

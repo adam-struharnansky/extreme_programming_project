@@ -1,6 +1,6 @@
 import pygame
 
-from auxiliary.colors import BLACK, WHITE, RED  # skontrolujte niekto, ci je toto spravny import, mne to funguje
+from source.auxiliary.colors import BLACK, WHITE, RED
 
 
 class CheckBox:
