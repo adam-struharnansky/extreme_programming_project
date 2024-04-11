@@ -13,7 +13,7 @@ DEBUG_MOVE = True
 SIZE = WIDTH, HEIGHT = 700, 770
 MENU_HEIGHT = 50
 BACKGROUND_COLOR = WHITE
-# todo: Namiesto slovnych typov mapy vytvorit nejaky enum
+# todo: Instead of strings use enums for types of the maps
 MAP_PARAMS = {'biome_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
 
 pygame.init()
@@ -39,7 +39,7 @@ def handle_keys():
     keys = pygame.key.get_pressed()
     screen.blit(menu_screen, (0, 0))
     screen.blit(map_screen, (0, MENU_HEIGHT))
-    # todo: Zmenit tieto magicke konstanty (key_states = 0, 1, 2) na nejaky enum
+    # todo: Change these magic constants (key_states = 0, 1, 2) to some understandable enum
 
     if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
         if key_states[pygame.K_RIGHT] < 1:
@@ -95,12 +95,12 @@ while True:
     screen.fill(BACKGROUND_COLOR)
 
     if state_of_game == GameState.MENU:
-        menu.handle_event(event)
+        menu.handle_event(event)  # todo: Why doesn't this need to be initialized?
         menu.draw_base_menu()
         menu.draw_size_options()
 
         for button in menu.base_menu_buttons:
-            temp_response = button.handle_event(event)
+            temp_response = button.handle_event(event)  # todo: Use some enums for this, not strings
             if temp_response is not None:
                 response = temp_response
 
@@ -150,7 +150,7 @@ while True:
                 break
         else:
             response = None
-        # todo: Namiesto komunikacie s response co je string pouzite na to nejaky enum
+        # todo: Instead of using strings for response, create some enums for this
         if response == "Save Game" and not saving:
             if DEBUG_ALL:
                 print("Map saved")

@@ -193,5 +193,5 @@ class Map:
                                 self._screen.blit(
                                     pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, armor.picture_path)), (x, y))
 
-                    for active_object in field.active_objects:
+                    for _ in field.active_objects:
                         pass  # todo: Draw objects
