@@ -1,11 +1,15 @@
 import sys
+import os
+
+# this line makes the directory one level above the root directory from which the relative imports are made
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
 
 import pygame
 
 from auxiliary import WHITE
 from auxiliary import GameState, Key
 from front_end import Menu
-from source.game.maps import Map
+from game.maps import Map
 
 DEBUG_ALL = False
 DEBUG_KEY = True
