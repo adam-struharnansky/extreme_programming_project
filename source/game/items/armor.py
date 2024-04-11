@@ -2,8 +2,8 @@
 import os
 import random
 
-from source.auxiliary.enums import ArmorType, ItemLevel
-from source.game.items.item import Item
+from source.auxiliary import ArmorType, ItemLevel
+from source.game.items import Item
 
 
 class Armor(Item):

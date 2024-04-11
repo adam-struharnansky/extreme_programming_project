@@ -1,6 +1,6 @@
 import os.path
 
-from source.game.characters.creature import Creature
+from source.game.characters import Creature
 
 
 class Player(Creature):

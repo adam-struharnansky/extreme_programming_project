@@ -1,9 +1,9 @@
 import os.path
 import random
 
-from source.auxiliary.enums import FieldType
-from source.game.characters.enemy import Enemy
-from source.game.items.item import Item
+from source.auxiliary import FieldType
+from source.game.characters import Enemy
+from source.game.items import Item
 
 
 class Field:

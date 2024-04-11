@@ -4,12 +4,12 @@ import random
 
 import pygame
 
-from source.auxiliary.colors import *
-from source.auxiliary.constants import GRAPHIC_DIRECTORY, DATA_DIRECTORY
-from source.auxiliary.enums import Key, FieldType
-from source.game.characters.enemy import Enemy
-from source.game.characters.player import Player
-from source.game.maps.field import Field
+from source.auxiliary import BLACK, WHITE
+from source.auxiliary import GRAPHIC_DIRECTORY, DATA_DIRECTORY
+from source.auxiliary import Key, FieldType
+from source.game.characters import Enemy
+from source.game.characters import Player
+from source.game.maps import Field
 
 FIELD_SIZE = 135
 OFFSET = 2

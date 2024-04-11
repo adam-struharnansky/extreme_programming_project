@@ -2,11 +2,11 @@
 import os
 import random
 
-from source.auxiliary.constants import GRAPHIC_DIRECTORY
-from source.auxiliary.enums import ArmorType, ItemLevel, PotionLevel
-from source.game.items.armor import Armor
-from source.game.items.item import Item
-from source.game.items.potion import Potion
+from source.auxiliary import GRAPHIC_DIRECTORY
+from source.auxiliary import ArmorType, ItemLevel, PotionLevel
+from source.game.items import Armor
+from source.game.items import Item
+from source.game.items import Potion
 
 
 def generate_random_item(item_level: ItemLevel = None, potion_level: PotionLevel = None) -> Item:

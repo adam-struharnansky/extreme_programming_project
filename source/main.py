@@ -2,10 +2,10 @@ import sys
 
 import pygame
 
-from auxiliary.colors import WHITE
-from auxiliary.enums import GameState, Key
-from front_end.menu import Menu
-from source.game.maps.map import Map
+from auxiliary import WHITE
+from auxiliary import GameState, Key
+from front_end import Menu
+from source.game.maps import Map
 
 DEBUG_ALL = False
 DEBUG_KEY = True

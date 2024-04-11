@@ -1,6 +1,6 @@
 import pygame
 
-from source.auxiliary.colors import BLACK, WHITE
+from source.auxiliary import BLACK, WHITE
 
 
 class Button:
