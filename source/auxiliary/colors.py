@@ -1,3 +1,11 @@
+"""
+colors
+
+This module contains all colors used in program in one place using RGB triplets with values
+between 0 - 255.
+
+"""
+
 
 # general colors
 BLACK = (0, 0, 0)

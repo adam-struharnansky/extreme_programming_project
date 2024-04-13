@@ -1,3 +1,11 @@
+"""
+constants
+
+This module contains all shared constants (non-changing values used at least in two modules)
+
+"""
+
+
 import os
 
 

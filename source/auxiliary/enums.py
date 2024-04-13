@@ -1,3 +1,11 @@
+"""
+enums
+
+This module contains all enums used in program in one place.
+
+"""
+
+
 from enum import auto, Enum
 
 # try to keep enums in this file alphabetical
