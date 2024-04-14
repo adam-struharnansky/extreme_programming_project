@@ -4,7 +4,7 @@ from source.game.characters import Player
 
 
 def test_player__eq__():
-    # todo: This behaves funny.
+    # fixme: This behaves funny.
 
     player_1 = Player()
     player_2 = Player()
