@@ -86,8 +86,8 @@ def handle_keys():
                     case _:
                         print("Achievement unlocked: How did we get here?")
 
-def handle_button():
-    for button in menu.in_game_buttons:
+def handle_button(menu_button):
+    for button in menu_button:
         temp_response = button.handle_event(event)
         if temp_response is not None:
             response = temp_response
@@ -118,7 +118,8 @@ while True:
             if opt_button.is_checked:
                 MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
 
-        response = handle_button()
+                
+        response = handle_button(menu.base_menu_buttons)
 
         if response == "New Game":
             state_of_game = GameState.LOADING_NEW_GAME
@@ -150,7 +151,7 @@ while True:
         game_map.draw()
         menu.draw_in_game_buttons()
 
-        response = handle_button()
+        response = handle_button(menu.in_game_buttons)
         
         # todo: Instead of using strings for response, create some enums for this
         if response == "Save Game" and not saving:
@@ -164,7 +165,7 @@ while True:
             saving = False
 
 
-        response = handle_button()
+        response = handle_button(menu.lost_game_buttons)
 
         if response == "Main menu":
             state_of_game = GameState.MENU
