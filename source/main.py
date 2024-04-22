@@ -86,6 +86,17 @@ def handle_keys():
                     case _:
                         print("Achievement unlocked: How did we get here?")
 
+def handle_button():
+    for button in menu.in_game_buttons:
+        temp_response = button.handle_event(event)
+        if temp_response is not None:
+            response = temp_response
+            break
+    else:
+        response = None
+
+    return response
+
 
 while True:
     for event in pygame.event.get():
@@ -103,19 +114,11 @@ while True:
         menu.draw_base_menu()
         menu.draw_size_options()
 
-        for button in menu.base_menu_buttons:
-            temp_response = button.handle_event(event)  # todo: Use some enums for this, not strings
-            if temp_response is not None:
-                response = temp_response
+        for opt_button in menu.menu_buttons:
+            if opt_button.is_checked:
+                MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
 
-                for opt_button in menu.menu_buttons:
-                    if opt_button.is_checked:
-                        MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
-
-                print(f"MAP params are: {MAP_PARAMS}")
-                break
-        else:
-            response = None
+        response = handle_button()
 
         if response == "New Game":
             state_of_game = GameState.LOADING_NEW_GAME
@@ -147,13 +150,8 @@ while True:
         game_map.draw()
         menu.draw_in_game_buttons()
 
-        for button in menu.in_game_buttons:
-            temp_response = button.handle_event(event)
-            if temp_response is not None:
-                response = temp_response
-                break
-        else:
-            response = None
+        response = handle_button()
+        
         # todo: Instead of using strings for response, create some enums for this
         if response == "Save Game" and not saving:
             if DEBUG_ALL:
@@ -165,15 +163,8 @@ while True:
         elif response is None:
             saving = False
 
-    if state_of_game == GameState.LOST_GAME:
-        menu.draw_lost_game_buttons()
-        for button in menu.lost_game_buttons:
-            temp_response = button.handle_event(event)
-            if temp_response is not None:
-                response = temp_response
-                break
-        else:
-            response = None
+
+        response = handle_button()
 
         if response == "Main menu":
             state_of_game = GameState.MENU
