@@ -23,6 +23,7 @@ class Field:
         self._active_objects = active_objects if active_objects else []
 
         self._enemy = None
+        self._loot = []
         self._picture_path = os.path.join('graphics', 'error', 'empty.png')
 
         match self._field_type:
@@ -65,6 +66,10 @@ class Field:
     @property
     def enemy(self) -> Enemy:
         return self._enemy
+
+    @property
+    def loot(self) -> []:
+        return self._loot
 
     @enemy.setter
     def enemy(self, enemy: Enemy) -> None:

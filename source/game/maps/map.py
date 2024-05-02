@@ -144,6 +144,25 @@ class Map:
         self._draw_map()
         self._draw_player()
         self._draw_statistics()
+        self._draw_loot()
+
+    def _draw_loot(self):
+        for row_difference in range(-OFFSET, OFFSET + 1):
+            for column_difference in range(-OFFSET, OFFSET + 1):
+                row = self._dat.player_pos[0] + row_difference
+                column = self._dat.player_pos[1] + column_difference
+
+                if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map):
+                    x = (FIELD_SIZE + 5) * (column_difference + OFFSET)
+                    y = (FIELD_SIZE + 5) * (row_difference + OFFSET)
+                    field = self._dat.map[row][column]
+
+                    if row % 5 == 0 and column % 6 == 1:
+                        enemy_image = pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, "items", "loot_chests", "loot_bronze.png"))
+                        self._screen.blit(enemy_image, (x, y))
+                       
+                    for _ in field.active_objects:
+                        pass  # todo: Draw objects
 
     def _time(self):
         return str(pygame.time.get_ticks()//1000) + " | "
