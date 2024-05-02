@@ -11,6 +11,8 @@ from auxiliary import GameState, Key
 from front_end import Menu
 from game.maps import Map
 
+from game.maps import MockMap
+
 DEBUG_ALL = False
 DEBUG_KEY = True
 DEBUG_MOVE = True
@@ -36,7 +38,7 @@ key_states = {}  # left, right, up, down
 saving = False
 
 menu = Menu(screen)
-game_map = Map(map_screen, menu_screen, debug=DEBUG_ALL or DEBUG_MOVE)
+game_map = MockMap(map_screen, menu_screen, debug=DEBUG_ALL or DEBUG_MOVE)
 
 
 def handle_keys():

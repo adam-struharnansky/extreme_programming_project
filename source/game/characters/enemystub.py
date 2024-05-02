@@ -1,6 +1,6 @@
 import os
 
-from source.game.characters import Creature
+from source.game.characters import Enemy
 
 
 class EnemyStub(Enemy):

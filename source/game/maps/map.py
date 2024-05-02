@@ -26,7 +26,7 @@ class Map:
 
     def __init__(self, screen: pygame.Surface,
                  stat_tab: pygame.Surface,
-                 file: str = 'map2.pickle',
+                 file: str = 'map8.pickle',
                  debug: bool = False) -> None:
         self._dat = self.Data()
         self._screen = screen
@@ -145,8 +145,11 @@ class Map:
         self._draw_player()
         self._draw_statistics()
 
+    def _time(self):
+        return str(pygame.time.get_ticks()//1000) + " | "
+        
     def _draw_statistics(self):
-        text = ""
+        text = self._time()
         text += "Att: " + str(self._dat.player.get_real_attack())
         text += " | Def: " + str(self._dat.player.get_real_defence())
         text += " | Evs: " + str(self._dat.player.evasion)
