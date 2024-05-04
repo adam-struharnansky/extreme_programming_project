@@ -58,6 +58,9 @@ class Key(Enum):
     RIGHT = 1073741903
 
 
+key_map = {member.value: member for member in Key}
+
+
 class PotionLevel(Enum):
     USUAL = 1
     RARE = 2

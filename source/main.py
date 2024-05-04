@@ -8,7 +8,7 @@ import pygame
 import logging
 
 from auxiliary import WHITE
-from auxiliary import GameState, Key
+from auxiliary import GameState, Key, key_map
 from auxiliary import setup_logging
 from front_end import Menu
 from game.maps import Map
@@ -76,29 +76,16 @@ def handle_keys():
         if key_states[i] == 1:
             key_states[i] = 2
             game_map.move(i)
-            match i:
-                case Key.RIGHT.value:
-                    logging.debug("right")
-                case Key.LEFT.value:
-                    logging.debug("left")
-                case Key.DOWN.value:
-                    logging.debug("down")
-                case Key.UP.value:
-                    logging.debug("up")
-                case _:
-                    logging.warning("Achievement unlocked: How did we get here?")
+            if i in key_map:
+                logging.debug(f'Direction {key_map[i].name}')
 
 
-def handle_button(menu_button):
-    for button in menu_button:
-        temp_response = button.handle_event(event)
-        if temp_response is not None:
-            response = temp_response
-            break
-    else:
-        response = None
-
-    return response
+def handle_button(menu_buttons):
+    for button in menu_buttons:
+        response = button.handle_event(event)
+        if response is not None:
+            return response
+    return None
 
 
 while True:
@@ -117,7 +104,6 @@ while True:
         for opt_button in menu.menu_buttons:
             if opt_button.is_checked:
                 MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
-
 
         response = handle_button(menu.base_menu_buttons)
 
@@ -162,7 +148,6 @@ while True:
             state_of_game = GameState.MENU
         elif response is None:
             saving = False
-
 
         response = handle_button(menu.lost_game_buttons)
 
