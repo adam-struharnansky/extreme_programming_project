@@ -5,21 +5,22 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
 
 import pygame
+import logging
 
 from auxiliary import WHITE
 from auxiliary import GameState, Key
+from auxiliary import setup_logging
 from front_end import Menu
 from game.maps import Map
 
-DEBUG_ALL = False
-DEBUG_KEY = True
-DEBUG_MOVE = True
+# constants
 SIZE = WIDTH, HEIGHT = 700, 770
 MENU_HEIGHT = 50
 BACKGROUND_COLOR = WHITE
 # todo: Instead of strings use enums for types of the maps
 MAP_PARAMS = {'biome_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
 
+setup_logging(level=logging.DEBUG)
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
 
@@ -36,7 +37,9 @@ key_states = {}  # left, right, up, down
 saving = False
 
 menu = Menu(screen)
-game_map = Map(map_screen, menu_screen, debug=DEBUG_ALL or DEBUG_MOVE)
+game_map = Map(map_screen, menu_screen, debug=True)
+
+logging.info('Start Menu')
 
 
 def handle_keys():
@@ -73,18 +76,18 @@ def handle_keys():
         if key_states[i] == 1:
             key_states[i] = 2
             game_map.move(i)
-            if DEBUG_KEY:
-                match i:
-                    case Key.RIGHT.value:
-                        print("right")
-                    case Key.LEFT.value:
-                        print("left")
-                    case Key.DOWN.value:
-                        print("down")
-                    case Key.UP.value:
-                        print("up")
-                    case _:
-                        print("Achievement unlocked: How did we get here?")
+            match i:
+                case Key.RIGHT.value:
+                    logging.debug("right")
+                case Key.LEFT.value:
+                    logging.debug("left")
+                case Key.DOWN.value:
+                    logging.debug("down")
+                case Key.UP.value:
+                    logging.debug("up")
+                case _:
+                    logging.warning("Achievement unlocked: How did we get here?")
+
 
 def handle_button(menu_button):
     for button in menu_button:
@@ -100,9 +103,6 @@ def handle_button(menu_button):
 
 while True:
     for event in pygame.event.get():
-        if DEBUG_ALL:
-            if event.type != pygame.MOUSEMOTION:
-                print("Event: " + str(event))
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -118,7 +118,7 @@ while True:
             if opt_button.is_checked:
                 MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
 
-                
+
         response = handle_button(menu.base_menu_buttons)
 
         if response == "New Game":
@@ -155,8 +155,7 @@ while True:
         
         # todo: Instead of using strings for response, create some enums for this
         if response == "Save Game" and not saving:
-            if DEBUG_ALL:
-                print("Map saved")
+            logging.info("Map saved")
             saving = True
             game_map.save_map()
         elif response == "Exit to Menu":

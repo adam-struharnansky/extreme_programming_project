@@ -15,3 +15,4 @@ Modules:
 from .colors import *
 from .constants import *
 from .enums import *
+from .logging_config import *

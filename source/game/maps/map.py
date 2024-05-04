@@ -2,6 +2,7 @@ import os
 import pickle
 import random
 
+import logging
 import pygame
 
 from source.auxiliary import BLACK, WHITE
@@ -43,7 +44,7 @@ class Map:
         data/mapXX.pickle, where XX marks the new generated map number
         :param file: Name of the file where map should be stored
         """
-        print('saving')
+        logging.info('Saving the map')
         if file is None:
             map_number = len(os.listdir(DATA_DIRECTORY))
             file = f'map{map_number}.pickle'
@@ -136,8 +137,7 @@ class Map:
                 self.move_player_if_possible(self._dat.player_pos[0] + 1, self._dat.player_pos[1])
             case Key.UP.value:
                 self.move_player_if_possible(self._dat.player_pos[0] - 1, self._dat.player_pos[1])
-        if self.DEBUG:
-            print('map._dat.player_pos', self._dat.player_pos)
+        logging.debug(f'map._dat.player_pos{self._dat.player_pos}')
 
     def draw(self):
         self._screen.fill(self._background_color)
