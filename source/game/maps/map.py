@@ -11,6 +11,7 @@ from source.auxiliary import Direction, FieldType, MapType
 from source.game.characters import Enemy
 from source.game.characters import Player
 from source.game.maps import Field
+from source.game.items import Loot
 
 FIELD_SIZE = 135
 OFFSET = 2
@@ -60,33 +61,6 @@ class Map:
         if not hasattr(self._dat, 'version') or self._dat.version != expected_version:
             raise ValueError("Mismatched pickle file version for map")
 
-    def generate_enemies(self, spawn_chance=0.05) -> None:
-        for row in self._dat.map:
-            for field in row:
-                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
-                    field.enemy = Enemy()
-                    field.enemy.generate_random_properties()
-
-    def generate_loot(self, spawn_chance=0.05) -> None:
-        for row in self._dat.map:
-            for field in row:
-                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
-                    if field.enemy is None:  # loot and enemy can not be at the same place
-                        # field.add_active_object()  # todo: Add loot generation
-                        pass
-
-    def _spread_terrain(self, start_row, start_col, field_type, row_count, column_count, spread_chance=0.5,
-                        spread_steps=3):
-        if spread_steps == 0:
-            return
-        for d_row in [-1, 0, 1]:
-            for d_col in [-1, 0, 1]:
-                new_row, new_col = start_row + d_row, start_col + d_col
-                if 0 <= new_row < row_count and 0 <= new_col < column_count:
-                    if random.random() < spread_chance:
-                        self._dat.map[new_row][new_col] = Field(field_type)
-                        self._spread_terrain(new_row, new_col, field_type, spread_chance * 0.9, spread_steps - 1)
-
     def _place_player_randomly(self, row_count: int = 50, column_count: int = 50):
         while True:
             row, col = random.randint(0, row_count - 1), random.randint(0, column_count - 1)
@@ -96,44 +70,76 @@ class Map:
                 self._dat.player_pos = [row, col]
                 break
 
-    def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_count: int = 5):
+    def _generate_enemies(self, spawn_chance=0.05) -> None:
+        for row in self._dat.map:
+            for field in row:
+                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
+                    field.enemy = Enemy()
+                    field.enemy.generate_random_properties()
+
+    def _generate_loot(self, spawn_chance=0.05) -> None:
+        for row in self._dat.map:
+            for field in row:
+                if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
+                    if field.enemy is None:
+                        field.loot = Loot()
+
+    def _spread_terrain(self, row, column, field_type, time_to_live, spreading_factor=0.5):
+        if time_to_live == 0:
+            return
+        if 0 > row or row >= len(self._dat.map) or 0 > column or column >= len(self._dat.map[0]):
+            return
+        if self._dat.map[row][column].field_type == field_type:
+            return
+        self._dat.map[row][column] = Field(field_type)
+        guaranteed_children = random.randint(0, 3)
+        for i, direction in enumerate([[-1, 0], [1, 0], [0, -1], [0, 1]]):
+            if i == guaranteed_children or random.random() < spreading_factor:
+                self._spread_terrain(row + direction[0], column + direction[1],
+                                     field_type, time_to_live - 1, spreading_factor)
+
+    def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_size: int = 5):
         self._dat = self.Data()
         self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_count)] for _ in range(row_count)]
+        for _ in range((row_count + column_count) // biome_size):
+            for field_type in FieldType:
+                if field_type == FieldType.PLAINS:
+                    continue
+                row, column = random.randint(0, row_count - 1), random.randint(0, column_count - 1)
 
-        for field_type in FieldType:
-            num_seeds = random.randint(int(biome_count - biome_count * 0.2), int(biome_count + biome_count * 0.2))
-            for _ in range(num_seeds):
-                seed_row = random.randint(num_seeds, row_count - 1)
-                seed_col = random.randint(num_seeds, column_count - 1)
-                self._spread_terrain(seed_row, seed_col, field_type, row_count, column_count)
+                if field_type == FieldType.WATER:  # rivers
+                    self._spread_terrain(row, column, field_type, biome_size * 30, 0.05)
+                else:
+                    self._spread_terrain(row, column, field_type, biome_size)
 
-        self._place_player_randomly()
-        self.generate_enemies()
-        self.generate_loot()
-
-    def generate_random_map(self, row_count: int = 100, column_count: int = 100) -> None:
+    def generate_random_map(self, row_count: int = 50, column_count: int = 50) -> None:
         self._dat = self.Data()
         self._dat.map = [[Field() for _ in range(column_count)] for _ in range(row_count)]
-        self._place_player_randomly()
-        self.generate_enemies()
-        self.generate_loot()
 
-    def generate_map(self, row_count: int = 50, column_count: int = 50, map_type: MapType = MapType.RANDOM):
+    def generate_map(self, size, map_type: MapType = MapType.RANDOM):
         match map_type.value:
             case MapType.RANDOM.value:
-                self.generate_random_map(row_count, column_count)
+                self.generate_random_map(size[0], size[1])
             case MapType.SMALL_BIOMES.value:
-                self.generate_biomes_map(row_count, column_count, 5)
+                self.generate_biomes_map(size[0], size[1], 5)
             case MapType.LARGE_BIOMES.value:
-                self.generate_biomes_map(row_count, column_count, 15)
+                self.generate_biomes_map(size[0], size[1], 15)
             case _:
                 raise ValueError('Not supported map type')
+        self._place_player_randomly()
+        self._generate_enemies()
+        self._generate_loot()
 
     def move_player_if_possible(self, row, column):
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
                 and self._dat.map[row][column].field_type not in NOT_ACCESSIBLE_FIELDS:
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
+            if self._dat.map[row][column].loot:
+                if not self._dat.player.add_item_to_equipment(self._dat.map[row][column].loot.get_item()):
+                    if not self._dat.player.add_item_to_inventory(self._dat.map[row][column].loot.get_item()):
+                        return
+                self._dat.map[row][column].loot = None
 
     def move(self, direction: Direction) -> None:
         match direction.value:
@@ -196,15 +202,15 @@ class Map:
                     self._screen.blit(field_image, (x, y))
 
                     if field.enemy:
-                        enemy_image = pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, field.enemy.picture_path()))
+                        enemy_image = pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, field.enemy.picture_path))
                         self._screen.blit(enemy_image, (x, y))
                         for armor in field.enemy.get_equipment():
                             if armor:
                                 self._screen.blit(
                                     pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, armor.picture_path)), (x, y))
-
-                    for _ in field.active_objects:
-                        pass  # todo: Draw objects
+                    if field.loot:
+                        loot_image = pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, field.loot.picture_path))
+                        self._screen.blit(loot_image, (x, y))
 
     def is_game_lost(self):
         return not self._dat.player.is_alive()

@@ -13,7 +13,7 @@ def generate_random_item(item_level: ItemLevel = None, potion_level: PotionLevel
     item_level = item_level if item_level else ItemLevel.BRONZE
     potion_level = potion_level if potion_level else PotionLevel.USUAL
 
-    item_types_number = [1, 2]
+    item_types_number = [1]
     generated_item_type = random.choice(item_types_number)
 
     match generated_item_type:

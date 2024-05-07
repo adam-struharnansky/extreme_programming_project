@@ -70,11 +70,6 @@ class Creature:
     _max_inventory: int = 20  # todo: This should change depending on the level
     _picture_path: str = os.path.join('error', 'empty.png')
 
-    def __post_init__(self):
-        self._effects = self.effects if self.effects else []
-        self._inventory = self.inventory if self.inventory else []
-        self._equipment = self.equipment if self.equipment else _Equipment()
-
     def change_health(self, health_difference: int) -> None:
         if not self._alive:
             return
@@ -95,7 +90,7 @@ class Creature:
         if not self._alive:
             return 0
         real_attack = self.attack
-        for armor in self._equipment.get_equipment():
+        for armor in self.equipment.get_equipment():
             if armor:
                 real_attack += armor.additional_attack
         # todo: Add change also from the effects
@@ -110,7 +105,7 @@ class Creature:
         if not self._alive:
             return 0
         real_defence = self.defence
-        for armor in self._equipment.get_equipment():
+        for armor in self.equipment.get_equipment():
             if armor:
                 real_defence += armor.additional_defence
         # todo: Add change also from the effects
@@ -125,7 +120,7 @@ class Creature:
         if not self._alive:
             return 0
         real_evasion = self.evasion
-        for effect in self._effects:
+        for effect in self.effects:
             if effect.effect_type == EffectType.EVASION:
                 real_evasion += effect.get_change()
         return real_evasion
@@ -145,7 +140,7 @@ class Creature:
         return real_speed
 
     def get_equipment(self) -> list:
-        return self._equipment.get_equipment()
+        return self.equipment.get_equipment()
 
     def add_item_to_equipment(self, item: Item) -> bool:
         """
@@ -159,7 +154,7 @@ class Creature:
             return False
         if not isinstance(item, Armor):
             return False
-        return self._equipment.add_equipment(item)
+        return self.equipment.add_equipment(item)
 
     def add_item_to_inventory(self, item: Item) -> bool:
         """
@@ -170,23 +165,23 @@ class Creature:
         """
         if not self._alive:
             return False
-        if len(self._inventory) > self._max_inventory:
+        if len(self.inventory) > self._max_inventory:
             return False
-        self._inventory.append(item)
+        self.inventory.append(item)
         return True
 
     def add_effect(self, effect: Effect) -> None:
         # if there is the same type of effect only the duration is changed (not adding new one)
         if not self._alive:
             return
-        if effect in self._effects:
-            self._effects[self._effects.index(effect)].effect_duration = effect.effect_duration
+        if effect in self.effects:
+            self.effects[self.effects.index(effect)].effect_duration = effect.effect_duration
         elif effect:
-            self._effects.append(effect)
+            self.effects.append(effect)
 
     def tick_effects(self) -> None:
         to_delete = []
-        for effect in self._effects:
+        for effect in self.effects:
             effect_type, change = effect.tick()
             if effect_type == EffectType.HEALTH:
                 self.change_health(change)
@@ -194,13 +189,13 @@ class Creature:
                 to_delete.append(effect)
 
         for effect in to_delete:
-            self._effects.remove(effect)
+            self.effects.remove(effect)
 
     def use_random_potion(self):
-        if self._inventory:  # todo: Can't be there other items in the inventory?
-            rnd = random.randint(0, len(self._inventory) - 1)
-            self.add_effect(self._inventory[rnd].use_potion())
-            self._inventory.remove(self._inventory[rnd])
+        if self.inventory:  # todo: Can't be there other items in the inventory?
+            rnd = random.randint(0, len(self.inventory) - 1)
+            self.add_effect(self.inventory[rnd].use_potion())
+            self.inventory.remove(self.inventory[rnd])
 
     def is_alive(self) -> bool:
         return self._alive

@@ -11,11 +11,15 @@ class Enemy(Creature):
     description: str = ""
     experience_drop: int = 0
 
+    def __post_init__(self):
+        self._picture_path = os.path.join('creatures', 'base_enemy.png')
+
+    @property
     def picture_path(self) -> str:
         """
         Overriding Creature function
         """
-        return os.path.join('creatures', 'base_enemy.png')
+        return self._picture_path
 
     def generate_random_properties(self):
         pass

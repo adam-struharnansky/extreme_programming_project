@@ -89,13 +89,14 @@ while True:
             state_of_game = menu.base_menu_response(event)
         case GameState.LOADING_NEW_GAME.value:
             try:
-                game_map.generate_map(next_map_size.value[0], next_map_size.value[1], next_map_type)
+                game_map.generate_map(next_map_size.value, next_map_type)
                 game_map.draw()
                 state_of_game = GameState.PLAYING_GAME
             except ValueError:
                 logging.error(f'Wrong arguments for generating a map')
                 state_of_game = GameState.MENU_INITIALIZATION
         case GameState.LOADING_EXISTING_GAME.value:
+            # todo: Add loading any file in the directory (make some way how to pick them)
             try:
                 game_map.load_map()
                 state_of_game = GameState.PLAYING_GAME
@@ -108,7 +109,7 @@ while True:
         case GameState.PLAYING_GAME.value:
             handle_keys()
             game_map.draw()
-            menu.draw_in_game_buttons()
+            menu.draw_in_game_buttons()  # todo: Does this need to be redrawn every time?
             state_of_game = GameState.LOST_GAME if game_map.is_game_lost() else menu.in_game_response(event)
         case GameState.SAVING_GAME.value:
             if pygame.time.get_ticks() - last_saved > SAVE_COOLDOWN:
