@@ -21,6 +21,13 @@ class ArmorType(Enum):
     FEET = auto()
 
 
+class Direction(Enum):
+    LEFT = auto()
+    RIGHT = auto()
+    UP = auto()
+    DOWN = auto()
+
+
 class EffectType(Enum):
     HEALTH = "health"
     SPEED = "speed"
@@ -51,14 +58,10 @@ class ItemLevel(Enum):
     LEGENDARY = auto()
 
 
-class Key(Enum):
-    UP = 1073741906
-    DOWN = 1073741905
-    LEFT = 1073741904
-    RIGHT = 1073741903
-
-
-key_map = {member.value: member for member in Key}
+class KeyStates(Enum):
+    UNPRESSED = auto()
+    PRESSED = auto()
+    PROCESSED = auto()
 
 
 class PotionLevel(Enum):

@@ -1,14 +1,13 @@
-import sys
+import logging
 import os
+import pygame
+import sys
 
 # this line makes the directory one level above the root directory from which the relative imports are made
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
 
-import pygame
-import logging
-
 from auxiliary import WHITE
-from auxiliary import GameState, Key, key_map
+from auxiliary import Direction, GameState, KeyStates
 from auxiliary import setup_logging
 from front_end import Menu
 from game.maps import Map
@@ -33,7 +32,8 @@ map_screen = pygame.Surface(map_screen_size)
 pygame.display.set_caption('Pygame Basic Window')
 
 state_of_game = GameState.MENU
-key_states = {}  # left, right, up, down
+key_states = {Direction.RIGHT: KeyStates.UNPRESSED, Direction.LEFT: KeyStates.UNPRESSED,
+              Direction.DOWN: KeyStates.UNPRESSED, Direction.UP: KeyStates.UNPRESSED}
 saving = False
 
 menu = Menu(screen)
@@ -42,42 +42,29 @@ game_map = Map(map_screen, menu_screen, debug=True)
 logging.info('Start Menu')
 
 
+def handle_key_press(direction, pressed):
+    if pressed:
+        if key_states[direction] == KeyStates.UNPRESSED:
+            key_states[direction] = KeyStates.PRESSED
+    else:
+        key_states[direction] = KeyStates.UNPRESSED
+
+
 def handle_keys():
     keys = pygame.key.get_pressed()
     screen.blit(menu_screen, (0, 0))
     screen.blit(map_screen, (0, MENU_HEIGHT))
-    # todo: Change these magic constants (key_states = 0, 1, 2) to some understandable enum
 
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        if key_states[pygame.K_RIGHT] < 1:
-            key_states[pygame.K_RIGHT] = 1
-    else:
-        key_states[pygame.K_RIGHT] = 0
-
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        if key_states[pygame.K_LEFT] < 1:
-            key_states[pygame.K_LEFT] = 1
-    else:
-        key_states[pygame.K_LEFT] = 0
-
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        if key_states[pygame.K_DOWN] < 1:
-            key_states[pygame.K_DOWN] = 1
-    else:
-        key_states[pygame.K_DOWN] = 0
-
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        if key_states[pygame.K_UP] < 1:
-            key_states[pygame.K_UP] = 1
-    else:
-        key_states[pygame.K_UP] = 0
+    handle_key_press(Direction.UP, keys[pygame.K_UP] or keys[pygame.K_w])
+    handle_key_press(Direction.DOWN, keys[pygame.K_DOWN] or keys[pygame.K_s])
+    handle_key_press(Direction.LEFT, keys[pygame.K_LEFT] or keys[pygame.K_a])
+    handle_key_press(Direction.RIGHT, keys[pygame.K_RIGHT] or keys[pygame.K_d])
 
     for i in key_states.keys():
-        if key_states[i] == 1:
-            key_states[i] = 2
+        if key_states[i] == KeyStates.PRESSED:
             game_map.move(i)
-            if i in key_map:
-                logging.debug(f'Direction {key_map[i].name}')
+            key_states[i] = KeyStates.PROCESSED
+            logging.debug(f'Processing direction: {i}')
 
 
 def handle_button(menu_buttons):

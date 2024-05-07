@@ -7,7 +7,7 @@ import pygame
 
 from source.auxiliary import BLACK, WHITE
 from source.auxiliary import GRAPHIC_DIRECTORY, DATA_DIRECTORY
-from source.auxiliary import Key, FieldType
+from source.auxiliary import Direction, FieldType
 from source.game.characters import Enemy
 from source.game.characters import Player
 from source.game.maps import Field
@@ -127,15 +127,15 @@ class Map:
             self._dat.player_pos[0] = row
             self._dat.player_pos[1] = column
 
-    def move(self, direction: int) -> None:
-        match direction:
-            case Key.RIGHT.value:
+    def move(self, direction: Direction) -> None:
+        match direction.value:
+            case Direction.RIGHT.value:
                 self.move_player_if_possible(self._dat.player_pos[0], self._dat.player_pos[1] + 1)
-            case Key.LEFT.value:
+            case Direction.LEFT.value:
                 self.move_player_if_possible(self._dat.player_pos[0], self._dat.player_pos[1] - 1)
-            case Key.DOWN.value:
+            case Direction.DOWN.value:
                 self.move_player_if_possible(self._dat.player_pos[0] + 1, self._dat.player_pos[1])
-            case Key.UP.value:
+            case Direction.UP.value:
                 self.move_player_if_possible(self._dat.player_pos[0] - 1, self._dat.player_pos[1])
         logging.debug(f'map._dat.player_pos{self._dat.player_pos}')
 
