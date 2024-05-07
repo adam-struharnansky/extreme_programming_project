@@ -61,11 +61,31 @@ class Map:
         if not hasattr(self._dat, 'version') or self._dat.version != expected_version:
             raise ValueError("Mismatched pickle file version for map")
 
+    def _player_possibilities(self, row, column, row_count, column_count) -> int:
+        # non-recursive DFS to find number of all places where player from given position can go
+        result = 0
+        visited = [[False for _ in range(column_count)] for _ in range(row_count)]
+        stack = [(row, column)]
+        while stack:
+            position = stack.pop()
+            if (0 > position[0] or row_count <= position[0] or 0 > position[1] or column_count <= position[1]
+                    or visited[position[0]][position[1]]
+                    or self._dat.map[row][column].field_type in NOT_ACCESSIBLE_FIELDS):
+                continue
+            result += 1
+            visited[position[0]][position[1]] = True
+            stack.append((position[0] + 1, position[1]))
+            stack.append((position[0] - 1, position[1]))
+            stack.append((position[0], position[1] + 1))
+            stack.append((position[0], position[1] - 1))
+        return result
+
     def _place_player_randomly(self, row_count: int = 50, column_count: int = 50):
         while True:
             row, col = random.randint(0, row_count - 1), random.randint(0, column_count - 1)
             if self._dat.map[row][col].field_type != FieldType.WATER \
-                    and self._dat.map[row][col].field_type != FieldType.MOUNTAIN:
+                    and self._dat.map[row][col].field_type != FieldType.MOUNTAIN\
+                    and self._player_possibilities(row, col, row_count, column_count) > row_count * column_count * 0.08:
                 self._dat.player = Player()
                 self._dat.player_pos = [row, col]
                 break
