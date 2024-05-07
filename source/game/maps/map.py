@@ -7,7 +7,7 @@ import pygame
 
 from source.auxiliary import BLACK, WHITE
 from source.auxiliary import GRAPHIC_DIRECTORY, DATA_DIRECTORY
-from source.auxiliary import Direction, FieldType
+from source.auxiliary import Direction, FieldType, MapType
 from source.game.characters import Enemy
 from source.game.characters import Player
 from source.game.maps import Field
@@ -121,6 +121,17 @@ class Map:
         self.generate_enemies()
         self.generate_loot()
 
+    def generate_map(self, row_count: int = 50, column_count: int = 50, map_type: MapType = MapType.RANDOM):
+        match map_type.value:
+            case MapType.RANDOM.value:
+                self.generate_random_map(row_count, column_count)
+            case MapType.SMALL_BIOMES.value:
+                self.generate_biomes_map(row_count, column_count, 5)
+            case MapType.LARGE_BIOMES.value:
+                self.generate_biomes_map(row_count, column_count, 15)
+            case _:
+                raise ValueError('Not supported map type')
+
     def move_player_if_possible(self, row, column):
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
                 and self._dat.map[row][column].field_type not in NOT_ACCESSIBLE_FIELDS:
@@ -137,6 +148,8 @@ class Map:
                 self.move_player_if_possible(self._dat.player_pos[0] + 1, self._dat.player_pos[1])
             case Direction.UP.value:
                 self.move_player_if_possible(self._dat.player_pos[0] - 1, self._dat.player_pos[1])
+            case _:
+                logging.warning(f'Not correct direction for move: {direction}')
         logging.debug(f'map._dat.player_pos{self._dat.player_pos}')
 
     def draw(self):

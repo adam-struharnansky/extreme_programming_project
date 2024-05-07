@@ -27,7 +27,7 @@ class CheckBox:
                 self._mouse_down = True
                 # Notify the group (if part of one) about the state change (so others can uncheck themselves)
                 if self._checkbox_group:
-                    self._checkbox_group.handle_event(self)
+                    self._checkbox_group.handle_checkbox(self)
 
         if event.type == pygame.MOUSEBUTTONUP:
             self._mouse_down = False

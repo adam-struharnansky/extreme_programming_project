@@ -64,6 +64,18 @@ class KeyStates(Enum):
     PROCESSED = auto()
 
 
+class MapSize(Enum):
+    SMALL = (50, 50)
+    MEDIUM = (80, 80)
+    LARGE = (120, 120)
+
+
+class MapType(Enum):
+    RANDOM = 'Random'
+    SMALL_BIOMES = 'Small Biomes'
+    LARGE_BIOMES = 'Large Biomes'
+
+
 class PotionLevel(Enum):
     USUAL = 1
     RARE = 2

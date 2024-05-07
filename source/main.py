@@ -7,7 +7,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
 
 from auxiliary import WHITE
-from auxiliary import Direction, GameState, KeyStates
+from auxiliary import Direction, GameState, KeyStates, MapType, MapSize
 from auxiliary import setup_logging
 from front_end import Menu
 from game.maps import Map
@@ -15,26 +15,27 @@ from game.maps import Map
 # constants
 SIZE = WIDTH, HEIGHT = 700, 770
 MENU_HEIGHT = 50
+MENU_SCREEN_SIZE = (WIDTH, MENU_HEIGHT)
+MAP_SCREEN_SIZE = (WIDTH, HEIGHT - MENU_HEIGHT)
 BACKGROUND_COLOR = WHITE
-# todo: Instead of strings use enums for types of the maps
-MAP_PARAMS = {'biome_type': 'random', 'sizes': {'row_number': 50, 'column_number': 50}}
 
+# variables
+next_map_type = MapType.RANDOM
+next_map_size = MapSize.SMALL
+saving = False
+state_of_game = GameState.MENU
+key_states = {Direction.RIGHT: KeyStates.UNPRESSED, Direction.LEFT: KeyStates.UNPRESSED,
+              Direction.DOWN: KeyStates.UNPRESSED, Direction.UP: KeyStates.UNPRESSED}
+
+# calling necessary components from pygame
 setup_logging(level=logging.DEBUG)
 pygame.init()
 screen = pygame.display.set_mode(SIZE)
 
-menu_screen_size = (WIDTH, MENU_HEIGHT)
-map_screen_size = (WIDTH, HEIGHT - MENU_HEIGHT)
-
-menu_screen = pygame.Surface(menu_screen_size)
-map_screen = pygame.Surface(map_screen_size)
+menu_screen = pygame.Surface(MENU_SCREEN_SIZE)
+map_screen = pygame.Surface(MAP_SCREEN_SIZE)
 
 pygame.display.set_caption('Pygame Basic Window')
-
-state_of_game = GameState.MENU
-key_states = {Direction.RIGHT: KeyStates.UNPRESSED, Direction.LEFT: KeyStates.UNPRESSED,
-              Direction.DOWN: KeyStates.UNPRESSED, Direction.UP: KeyStates.UNPRESSED}
-saving = False
 
 menu = Menu(screen)
 game_map = Map(map_screen, menu_screen, debug=True)
@@ -88,9 +89,8 @@ while True:
         menu.draw_base_menu()
         menu.draw_size_options()
 
-        for opt_button in menu.menu_buttons:
-            if opt_button.is_checked:
-                MAP_PARAMS[opt_button.option['label']] = opt_button.option['value']
+        next_map_size = menu.map_size()
+        next_map_type = menu.map_type()
 
         response = handle_button(menu.base_menu_buttons)
 
@@ -102,17 +102,12 @@ while True:
             break
 
     if state_of_game == GameState.LOADING_NEW_GAME:
-        if MAP_PARAMS['biome_type'] == 'random':
-            game_map.generate_random_map(row_count=MAP_PARAMS["sizes"]['row_number'],
-                                         column_count=MAP_PARAMS['sizes']['column_number'])
-        elif MAP_PARAMS['biome_type'] == 'Biomes map':
-            game_map.generate_biomes_map(row_count=MAP_PARAMS["sizes"]['row_number'],
-                                         column_count=MAP_PARAMS['sizes']['column_number'], biome_count=5)
-        else:
-            game_map.generate_biomes_map(row_count=MAP_PARAMS["sizes"]['row_number'],
-                                         column_count=MAP_PARAMS['sizes']['column_number'], biome_count=20)
-        game_map.draw()
-        state_of_game = GameState.PLAYING_GAME
+        try:
+            game_map.generate_map(next_map_size.value[0], next_map_size.value[1], next_map_type)
+            game_map.draw()
+            state_of_game = GameState.PLAYING_GAME
+        except ValueError:
+            logging.warning(f'Wrong arguments for generating a map')
 
     if state_of_game == GameState.LOADING_EXISTING_GAME:
         game_map.load_map()
@@ -125,7 +120,7 @@ while True:
         menu.draw_in_game_buttons()
 
         response = handle_button(menu.in_game_buttons)
-        
+
         # todo: Instead of using strings for response, create some enums for this
         if response == "Save Game" and not saving:
             logging.info("Map saved")
