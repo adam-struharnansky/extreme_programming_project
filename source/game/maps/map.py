@@ -56,12 +56,9 @@ class Map:
             file = self._file
         with open(os.path.join(DATA_DIRECTORY, file), 'rb') as f:
             self._dat = pickle.load(f)
-
-        try:
-            if self._dat.version != self.Data().version:
-                raise Exception("Bad pickle version")
-        except AttributeError:
-            raise Exception("Bad pickle version")
+        expected_version = self.Data().version
+        if not hasattr(self._dat, 'version') or self._dat.version != expected_version:
+            raise ValueError("Mismatched pickle file version for map")
 
     def generate_enemies(self, spawn_chance=0.05) -> None:
         for row in self._dat.map:
@@ -208,3 +205,6 @@ class Map:
 
                     for _ in field.active_objects:
                         pass  # todo: Draw objects
+
+    def is_game_lost(self):
+        return not self._dat.player.is_alive()

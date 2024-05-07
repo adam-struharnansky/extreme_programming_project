@@ -27,3 +27,7 @@ class CheckboxGroup:
     def draw(self):
         for checkbox in self._checkboxes:
             checkbox.draw()
+
+    def redraw_boxes(self):
+        for checkbox in self._checkboxes:
+            checkbox.redraw_box()

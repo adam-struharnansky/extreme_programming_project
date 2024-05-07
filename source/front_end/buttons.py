@@ -1,10 +1,11 @@
 import pygame
 
-from source.auxiliary import BLACK, WHITE
+from source.auxiliary import BLACK, WHITE, GameState
 
 
 class Button:
-    def __init__(self, x: int, y: int, width: int, height: int, text: str, screen: pygame.Surface) -> None:
+    def __init__(self, x: int, y: int, width: int, height: int,
+                 text: str, screen: pygame.Surface, response: GameState) -> None:
         """
         Create a button with given parameters on the screen
         :param x: Left-most point of the button
@@ -20,6 +21,7 @@ class Button:
         self._height = height
         self._text = text
         self._screen = screen
+        self._response = response
 
         self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
         self._font = pygame.font.SysFont('Arial', 25)
@@ -30,7 +32,10 @@ class Button:
         pygame.draw.rect(self._screen, BLACK, self._rect)
         self._screen.blit(self._text_surf, self._text_rect)
 
-    def handle_event(self, event):
+    def get_response_to_event(self, event):
+        if not event:
+            return None
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self._rect.collidepoint(event.pos):
-                return self._text
+                return self._response
+        return None

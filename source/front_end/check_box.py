@@ -20,6 +20,8 @@ class CheckBox:
         self._mouse_down = False
 
     def handle_event(self, event):
+        if not event:
+            return
         if event.type == pygame.MOUSEBUTTONDOWN and not self._mouse_down:
             if self._box.collidepoint(event.pos):
                 # Toggle the checkbox state if the box area is clicked
@@ -33,8 +35,15 @@ class CheckBox:
             self._mouse_down = False
 
     def draw(self):
+        self.redraw_box()
+
+        # Draw the text next to the box
+        self._screen.blit(self._text_surface,
+                          (self._x + self._width + 10, self._y + (self._height - self._text_surface.get_height()) // 2))
+
+    def redraw_box(self):
         # If checked, draw an "X", otherwise just draw the box
-        if self.is_checked:
+        if self._is_checked:
             pygame.draw.rect(self._screen, WHITE, self._box)
             pygame.draw.rect(self._screen, BLACK, self._box, 2)  # Border for box
             center = self._box.center
@@ -46,10 +55,6 @@ class CheckBox:
             # Draw the white box with a black border
             pygame.draw.rect(self._screen, WHITE, self._box)
             pygame.draw.rect(self._screen, BLACK, self._box, 2)  # Border for box
-
-        # Draw the text next to the box
-        self._screen.blit(self._text_surface,
-                          (self._x + self._width + 10, self._y + (self._height - self._text_surface.get_height()) // 2))
 
     @property
     def is_checked(self):

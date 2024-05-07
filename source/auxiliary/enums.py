@@ -44,11 +44,14 @@ class FieldType(Enum):
 
 
 class GameState(Enum):
+    MENU_INITIALIZATION = auto()
     MENU = auto()
     LOADING_NEW_GAME = auto()
     LOADING_EXISTING_GAME = auto()
     PLAYING_GAME = auto()
+    SAVING_GAME = auto()
     LOST_GAME = auto()
+    EXIT = auto()
 
 
 class ItemLevel(Enum):
@@ -68,12 +71,14 @@ class MapSize(Enum):
     SMALL = (50, 50)
     MEDIUM = (80, 80)
     LARGE = (120, 120)
+    DEFAULT = SMALL
 
 
 class MapType(Enum):
     RANDOM = 'Random'
     SMALL_BIOMES = 'Small Biomes'
     LARGE_BIOMES = 'Large Biomes'
+    DEFAULT = SMALL_BIOMES
 
 
 class PotionLevel(Enum):
