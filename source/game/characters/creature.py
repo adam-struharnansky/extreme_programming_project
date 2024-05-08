@@ -57,7 +57,7 @@ class Creature:
     def change_health(self, health_difference: int) -> None:
         if not self._alive:
             return
-        self.health += min(self.max_health, max(0, health_difference))
+        self.health = min(self.max_health, max(0, self.health + health_difference))
         if self.health == 0:
             self._alive = False
 
