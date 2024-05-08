@@ -1,33 +1,32 @@
+import pygame.event
+
+
+from source.front_end import CheckBox
+
 
 class CheckboxGroup:
     def __init__(self):
-        self._checkboxes = []
+        self._checkboxes: list[CheckBox] = []
     
-    def add(self, checkbox):
+    def add(self, checkbox: CheckBox) -> None:
         self._checkboxes.append(checkbox)
         checkbox.checkbox_group = self
-        
-    def handle_checkbox(self, handled_checkbox):
-        # If a checkbox is clicked, uncheck all others in the group
-        if handled_checkbox.is_checked:
-            for checkbox in self._checkboxes:
-                if checkbox != handled_checkbox:
-                    checkbox.is_checked = False
 
-    def handle_event(self, event):
+    def uncheck_others(self, primary_checkbox: CheckBox) -> None:
+        for checkbox in self._checkboxes:
+            if checkbox != primary_checkbox:
+                checkbox.is_checked = False
+
+    def handle_event(self, event: pygame.event.Event) -> None:
         for checkbox in self._checkboxes:
             checkbox.handle_event(event)
 
-    def get_value(self):
+    def get_value(self) -> any:
         for checkbox in self._checkboxes:
             if checkbox.is_checked:
                 return checkbox.option
         return None
 
-    def draw(self):
+    def draw_checkbox_group(self) -> None:
         for checkbox in self._checkboxes:
-            checkbox.draw()
-
-    def redraw_boxes(self):
-        for checkbox in self._checkboxes:
-            checkbox.redraw_box()
+            checkbox.draw_check_box()

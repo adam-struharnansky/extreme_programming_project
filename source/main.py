@@ -80,10 +80,10 @@ while True:
             sys.exit()
     match state_of_game.value:
         case GameState.MENU_INITIALIZATION.value:
-            menu.draw()
+            menu.draw_base_menu()
             state_of_game = GameState.MENU
         case GameState.MENU.value:
-            menu.change_map_checkboxes(event)
+            menu.recheck_map_checkboxes(event)
             next_map_size = menu.map_size()
             next_map_type = menu.map_type()
             state_of_game = menu.base_menu_response(event)
