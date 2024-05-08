@@ -2,12 +2,10 @@ import pygame
 
 from source.auxiliary import BLACK, WHITE
 from source.auxiliary import MapType, MapSize, GameState
-from source.front_end import Button
-from source.front_end import CheckBox
-from source.front_end import CheckboxGroup
+from source.front_end import Button, CheckBox, CheckboxGroup
 
 
-def _find_response(buttons: list[Button], event: pygame.event.Event):
+def _find_response(buttons: list[Button], event: pygame.event.Event) -> GameState | None:
     for button in buttons:
         response = button.get_response_to_event(event)
         if response:

@@ -1,15 +1,13 @@
-import os
-import pickle
-import random
 
 import logging
+import os
+import pickle
 import pygame
+import random
 
-from source.auxiliary import BLACK, WHITE
-from source.auxiliary import GRAPHIC_DIRECTORY, DATA_DIRECTORY
+from source.auxiliary import BLACK, WHITE, GRAPHIC_DIRECTORY, DATA_DIRECTORY
 from source.auxiliary import Direction, FieldType, MapType
-from source.game.characters import Enemy
-from source.game.characters import Player
+from source.game.characters import Enemy, Player
 from source.game.maps import Field
 from source.game.items import Loot
 
@@ -61,15 +59,17 @@ class Map:
         if not hasattr(self._dat, 'version') or self._dat.version != expected_version:
             raise ValueError("Mismatched pickle file version for map")
 
-    def _player_possibilities(self, row, column, row_count, column_count) -> int:
+    def _player_possibilities(self, row: int, column: int) -> int:
         # non-recursive DFS to find number of all places where player from given position can go
+        if len(self._dat.map) == 0:
+            return 0
         result = 0
-        visited = [[False for _ in range(column_count)] for _ in range(row_count)]
+        visited = [[False for _ in range(len(self._dat.map[0]))] for _ in range(len(self._dat.map))]
         stack = [(row, column)]
         while stack:
             position = stack.pop()
-            if (0 > position[0] or row_count <= position[0] or 0 > position[1] or column_count <= position[1]
-                    or visited[position[0]][position[1]]
+            if (0 > position[0] or len(self._dat.map) <= position[0] or 0 > position[1]
+                    or len(self._dat.map[0]) <= position[1] or visited[position[0]][position[1]]
                     or self._dat.map[row][column].field_type in NOT_ACCESSIBLE_FIELDS):
                 continue
             result += 1
@@ -80,31 +80,32 @@ class Map:
             stack.append((position[0], position[1] - 1))
         return result
 
-    def _place_player_randomly(self, row_count: int = 50, column_count: int = 50):
+    def _place_player_randomly(self, row_count: int = 50, column_count: int = 50) -> None:
         while True:
             row, col = random.randint(0, row_count - 1), random.randint(0, column_count - 1)
             if self._dat.map[row][col].field_type != FieldType.WATER \
                     and self._dat.map[row][col].field_type != FieldType.MOUNTAIN\
-                    and self._player_possibilities(row, col, row_count, column_count) > row_count * column_count * 0.08:
+                    and self._player_possibilities(row, col) > row_count * column_count * 0.08:
                 self._dat.player = Player()
                 self._dat.player_pos = [row, col]
                 break
 
-    def _generate_enemies(self, spawn_chance=0.05) -> None:
+    def _generate_enemies(self, spawn_chance: float = 0.05) -> None:
         for row in self._dat.map:
             for field in row:
                 if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
                     field.enemy = Enemy()
                     field.enemy.generate_random_properties()
 
-    def _generate_loot(self, spawn_chance=0.05) -> None:
+    def _generate_loot(self, spawn_chance: float = 0.05) -> None:
         for row in self._dat.map:
             for field in row:
                 if random.random() < spawn_chance and field.field_type not in NOT_ACCESSIBLE_FIELDS:
                     if field.enemy is None:
                         field.loot = Loot()
 
-    def _spread_terrain(self, row, column, field_type, time_to_live, spreading_factor=0.5):
+    def _spread_terrain(self, row: int, column: int, field_type: FieldType, time_to_live: int,
+                        spreading_factor: float = 0.5) -> None:
         if time_to_live == 0:
             return
         if 0 > row or row >= len(self._dat.map) or 0 > column or column >= len(self._dat.map[0]):
@@ -112,13 +113,13 @@ class Map:
         if self._dat.map[row][column].field_type == field_type:
             return
         self._dat.map[row][column] = Field(field_type)
-        guaranteed_children = random.randint(0, 3)
+        guaranteed_child = random.randint(0, 3)
         for i, direction in enumerate([[-1, 0], [1, 0], [0, -1], [0, 1]]):
-            if i == guaranteed_children or random.random() < spreading_factor:
+            if i == guaranteed_child or random.random() < spreading_factor:
                 self._spread_terrain(row + direction[0], column + direction[1],
                                      field_type, time_to_live - 1, spreading_factor)
 
-    def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_size: int = 5):
+    def generate_biomes_map(self, row_count: int = 50, column_count: int = 50, biome_size: int = 5) -> None:
         self._dat = self.Data()
         self._dat.map = [[Field(FieldType.PLAINS) for _ in range(column_count)] for _ in range(row_count)]
         for _ in range((row_count + column_count) // biome_size):
@@ -136,7 +137,7 @@ class Map:
         self._dat = self.Data()
         self._dat.map = [[Field() for _ in range(column_count)] for _ in range(row_count)]
 
-    def generate_map(self, size, map_type: MapType = MapType.RANDOM):
+    def generate_map(self, size, map_type: MapType = MapType.RANDOM) -> None:
         match map_type.value:
             case MapType.RANDOM.value:
                 self.generate_random_map(size[0], size[1])
@@ -150,7 +151,7 @@ class Map:
         self._generate_enemies()
         self._generate_loot()
 
-    def move_player_if_possible(self, row, column):
+    def move_player_if_possible(self, row: int, column: int) -> None:
         if 0 <= row < len(self._dat.map) and 0 <= column < len(self._dat.map[0]) \
                 and self._dat.map[row][column].field_type not in NOT_ACCESSIBLE_FIELDS:
             self._dat.player_pos[0] = row
@@ -175,13 +176,13 @@ class Map:
                 logging.warning(f'Not correct direction for move: {direction}')
         logging.debug(f'map._dat.player_pos{self._dat.player_pos}')
 
-    def draw(self):
+    def draw(self) -> None:
         self._screen.fill(self._background_color)
         self._draw_map()
         self._draw_player()
         self._draw_statistics()
 
-    def _draw_statistics(self):
+    def _draw_statistics(self) -> None:
         text = ""
         text += "Att: " + str(self._dat.player.get_real_attack())
         text += " | Def: " + str(self._dat.player.get_real_defence())
@@ -196,7 +197,7 @@ class Map:
         self._stat_tab.fill(BLACK)
         self._stat_tab.blit(text_surface, (10, 5))
 
-    def _draw_player(self):
+    def _draw_player(self) -> None:
         x = 2 * (FIELD_SIZE + 5)
         y = 2 * (FIELD_SIZE + 5)
         # drawing base player
@@ -207,7 +208,7 @@ class Map:
             if armor:
                 self._screen.blit(pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, armor.picture_path)), (x, y))
 
-    def _draw_map(self):
+    def _draw_map(self) -> None:
         for row_difference in range(-OFFSET, OFFSET + 1):
             for column_difference in range(-OFFSET, OFFSET + 1):
                 row = self._dat.player_pos[0] + row_difference
@@ -232,5 +233,5 @@ class Map:
                         loot_image = pygame.image.load(os.path.join(GRAPHIC_DIRECTORY, field.loot.picture_path))
                         self._screen.blit(loot_image, (x, y))
 
-    def is_game_lost(self):
+    def is_game_lost(self) -> bool:
         return not self._dat.player.is_alive()

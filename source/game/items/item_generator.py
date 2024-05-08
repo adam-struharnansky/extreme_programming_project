@@ -75,7 +75,7 @@ def generate_random_armor(item_level: ItemLevel = None) -> Armor:
             file_name = file_name + '_legendary.png'
 
     path = os.path.join(GRAPHIC_DIRECTORY, 'items', 'armor', file_name)
-    return Armor(armor_type, item_level, additional_attack, additional_defence, path)
+    return Armor(armor_type[0], item_level, additional_attack, additional_defence, path)
 
 
 def generate_random_potion(potion_level: PotionLevel = None) -> Potion:

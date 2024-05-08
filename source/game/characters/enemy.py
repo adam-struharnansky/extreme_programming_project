@@ -7,8 +7,8 @@ from source.game.characters import Creature
 
 @dataclass
 class Enemy(Creature):
-    name: str = ""
-    description: str = ""
+    name: str = ''
+    description: str = ''
     experience_drop: int = 0
 
     def __post_init__(self):

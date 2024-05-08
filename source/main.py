@@ -22,7 +22,7 @@ SAVE_COOLDOWN = 1000  # milliseconds
 next_map_type = MapType.RANDOM
 next_map_size = MapSize.SMALL
 saving = False
-state_of_game = GameState.MENU_INITIALIZATION
+game_state = GameState.MENU_INITIALIZATION
 previous_game_state = GameState.EXIT
 key_states = {Direction.RIGHT: KeyStates.UNPRESSED, Direction.LEFT: KeyStates.UNPRESSED,
               Direction.DOWN: KeyStates.UNPRESSED, Direction.UP: KeyStates.UNPRESSED}
@@ -70,56 +70,56 @@ def handle_keys():
 
 
 while True:
-    if previous_game_state != state_of_game:
-        logging.info(f'State of the Game: {state_of_game}')
-        previous_game_state = state_of_game
+    if previous_game_state != game_state:
+        logging.info(f'State of the Game: {game_state}')
+        previous_game_state = game_state
     event = None
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    match state_of_game.value:
+    match game_state.value:
         case GameState.MENU_INITIALIZATION.value:
             menu.draw_base_menu()
-            state_of_game = GameState.MENU
+            game_state = GameState.MENU
         case GameState.MENU.value:
             menu.recheck_map_checkboxes(event)
             next_map_size = menu.map_size()
             next_map_type = menu.map_type()
-            state_of_game = menu.base_menu_response(event)
+            game_state = menu.base_menu_response(event)
         case GameState.LOADING_NEW_GAME.value:
             try:
                 game_map.generate_map(next_map_size.value, next_map_type)
                 game_map.draw()
-                state_of_game = GameState.PLAYING_GAME
+                game_state = GameState.PLAYING_GAME
             except ValueError:
                 logging.error(f'Wrong arguments for generating a map')
-                state_of_game = GameState.MENU_INITIALIZATION
+                game_state = GameState.MENU_INITIALIZATION
         case GameState.LOADING_EXISTING_GAME.value:
             # todo: Add loading any file in the directory (make some way how to pick them)
             try:
                 game_map.load_map()
-                state_of_game = GameState.PLAYING_GAME
+                game_state = GameState.PLAYING_GAME
             except FileNotFoundError:
                 logging.error('Error: Pickle file for map not found')
-                state_of_game = GameState.MENU_INITIALIZATION
+                game_state = GameState.MENU_INITIALIZATION
             except ValueError as valueError:
                 logging.error(valueError)
-                state_of_game = GameState.MENU_INITIALIZATION
+                game_state = GameState.MENU_INITIALIZATION
         case GameState.PLAYING_GAME.value:
             handle_keys()
             game_map.draw()
             menu.draw_in_game_buttons()  # todo: Does this need to be redrawn every time?
-            state_of_game = GameState.LOST_GAME if game_map.is_game_lost() else menu.in_game_response(event)
+            game_state = GameState.LOST_GAME if game_map.is_game_lost() else menu.in_game_response(event)
         case GameState.SAVING_GAME.value:
             if pygame.time.get_ticks() - last_saved > SAVE_COOLDOWN:
                 game_map.save_map()
                 logging.info('Map saved')
                 last_saved = pygame.time.get_ticks()
-                state_of_game = GameState.PLAYING_GAME
+                game_state = GameState.PLAYING_GAME
         case GameState.LOST_GAME.value:
             # todo: Add stuff for Game Over: show button for returning to the main menu, maybe some stats..
-            state_of_game = menu.lost_game_response(event)
+            game_state = menu.lost_game_response(event)
         case GameState.EXIT.value:
             break
     pygame.display.flip()

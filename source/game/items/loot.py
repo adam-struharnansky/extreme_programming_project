@@ -1,11 +1,11 @@
-
+import logging
 import os
 import random
 
 from dataclasses import dataclass, field
 
 from source.auxiliary import ItemLevel
-from source.game.items import generate_random_item
+from source.game.items import generate_random_item, Item
 
 
 @dataclass
@@ -22,10 +22,13 @@ class Loot:
                 self._picture_path = os.path.join('items', 'loot_chests', 'loot_gold.png')
             case ItemLevel.LEGENDARY:
                 self._picture_path = os.path.join('items', 'loot_chests', 'loot_legendary.png')
+            case _:
+                logging.error('Non existent ItemLevel for Loot initialization')
+                self._picture_path = os.path.join('graphics', 'error', 'empty.png')
 
-    def get_item(self):
+    def get_item(self) -> Item:
         return generate_random_item(self.item_level)
 
     @property
-    def picture_path(self):
+    def picture_path(self) -> str:
         return self._picture_path

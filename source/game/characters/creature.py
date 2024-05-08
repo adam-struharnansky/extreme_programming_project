@@ -1,3 +1,4 @@
+import logging
 import os.path
 import random
 
@@ -16,42 +17,25 @@ class _Equipment:
     _body_armor: Optional[Armor] = None
     _legs_armor: Optional[Armor] = None
     _feet_armor: Optional[Armor] = None
-    _right_hand: Optional[Armor] = None
-    _left_hand: Optional[Armor] = None
+    _right_arm_armor: Optional[Armor] = None
+    _left_arm_armor: Optional[Armor] = None
 
     def add_equipment(self, item: Armor) -> bool:
         if not isinstance(item, Armor):
             return False
-        match item.armor_type:
-            case ArmorType.HEAD:
-                if not item.is_other_better(self._head_armor):
-                    self._head_armor = item
-                    return True
-            case ArmorType.BODY:
-                if not item.is_other_better(self._body_armor):
-                    self._body_armor = item
-                    return True
-            case ArmorType.LEGS:
-                if not item.is_other_better(self._legs_armor):
-                    self._legs_armor = item
-                    return True
-            case ArmorType.FEET:
-                if not item.is_other_better(self._feet_armor):
-                    self._feet_armor = item
-                    return True
-            case ArmorType.LEFT_ARM:
-                if not item.is_other_better(self._left_hand):
-                    self._left_hand = item
-                    return True
-            case ArmorType.RIGHT_ARM:
-                if not item.is_other_better(self._right_hand):
-                    self._right_hand = item
-                    return True
+        logging.debug(f'Adding item to equipment with type: {item.armor_type} and level: {item.armor_level}')
+        for armor_type in ArmorType:
+            if item.armor_type != armor_type:
+                continue
+            armor_attr = getattr(self, f"_{armor_type.name.lower()}_armor")
+            if not item.is_other_better(armor_attr):
+                setattr(self, f"_{armor_type.name.lower()}_armor", item)
+                return True
         return False
 
     def get_equipment(self) -> List[Optional[Armor]]:
-        return [self._head_armor, self._right_hand, self._feet_armor, self._body_armor, self._legs_armor,
-                self._left_hand]
+        return [self._head_armor, self._right_arm_armor, self._feet_armor, self._body_armor, self._legs_armor,
+                self._left_arm_armor]
 
 
 @dataclass
@@ -66,7 +50,7 @@ class Creature:
     inventory: List[Item] = field(default_factory=list)
     effects: List[Effect] = field(default_factory=list)
 
-    _alive = True
+    _alive: bool = True
     _max_inventory: int = 20  # todo: This should change depending on the level
     _picture_path: str = os.path.join('error', 'empty.png')
 
@@ -139,7 +123,7 @@ class Creature:
                 real_speed += effect.get_change()
         return real_speed
 
-    def get_equipment(self) -> list:
+    def get_equipment(self) -> list[Optional[Armor]]:
         return self.equipment.get_equipment()
 
     def add_item_to_equipment(self, item: Item) -> bool:

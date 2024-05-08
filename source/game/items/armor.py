@@ -10,30 +10,29 @@ class Armor(Item):
     def __init__(self, armor_type: ArmorType = None, armor_level: ItemLevel = None, additional_attack: int = 0,
                  additional_defence: int = 0, picture_path: str = None):
         super().__init__()
-
-        self._armor_type = armor_type if armor_type else random.choice(list(ArmorType))
-        self._armor_level = armor_level if armor_level else random.choice(list(ItemLevel))
+        self._armor_type = armor_type or random.choice(list(ArmorType))
+        self._armor_level = armor_level or random.choice(list(ItemLevel))
         self._additional_attack = additional_attack
         self._additional_defence = additional_defence
-        self._picture_path = picture_path if picture_path else os.path.join('error', 'empty.png')
+        self._picture_path = picture_path or os.path.join('error', 'empty.png')
 
     @property
     def armor_type(self) -> ArmorType:
-        return self._armor_type[0]
+        return self._armor_type
 
     @property
     def armor_level(self) -> ItemLevel:
         return self._armor_level
 
     @property
-    def additional_defence(self):
+    def additional_defence(self) -> int:
         return self._additional_defence
 
     @property
-    def additional_attack(self):
+    def additional_attack(self) -> int:
         return self._additional_attack
 
-    def is_other_better(self, other: 'Armor' = None):
+    def is_other_better(self, other: 'Armor' = None) -> bool:
         if other is None:
             return False
         if not isinstance(other, Armor):
@@ -42,5 +41,5 @@ class Armor(Item):
                (other.additional_attack + other.additional_defence)
 
     @property
-    def picture_path(self):
+    def picture_path(self) -> str:
         return self._picture_path

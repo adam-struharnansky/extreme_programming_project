@@ -1,5 +1,7 @@
+import logging
 import os.path
 import random
+
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
@@ -28,6 +30,7 @@ class Field:
             case FieldType.DESERT:
                 self._picture_path = os.path.join('map_tiles', 'desert.png')
             case _:
+                logging.error('Non existent FieldType for Field initialization')
                 self._picture_path = os.path.join('graphics', 'error', 'empty.png')
 
     @property
